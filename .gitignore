@@ -17,6 +17,7 @@ classes/
 */*/*/target/*
 */*/*.properties
 */*/*/*.properties
+*/*/*/*/*.properties
 ## generic files to ignore
 *~
 *.lock
