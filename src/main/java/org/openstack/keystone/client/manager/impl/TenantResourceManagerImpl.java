@@ -115,7 +115,7 @@ public class TenantResourceManagerImpl extends ResponseManagermpl implements Ten
     @Override
     public RoleList retrieveRolesByTenantId(Client client, String url, String token, String tenantId, String userId) throws KeystoneFault, URISyntaxException {
         ClientResponse response = null;
-        URI uri = new URI(url + KeystoneConstants.TENANT_PATH + "/" + tenantId + "/users/" + userId);
+        URI uri = new URI(url + KeystoneConstants.TENANT_PATH + "/" + tenantId + "/users/" + userId + "/" + KeystoneConstants.ROLES_PATH);
         try {
             response = get(client, uri, token);
         } catch (UniformInterfaceException ux) {

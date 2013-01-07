@@ -49,6 +49,7 @@ public class KeystoneConstants {
     public static final String GROUPS_PATH = "groups";
     public static final String ENDPOINTS_PATH = "endpoints";
     public static final String TENANT_PATH = "tenants";
+    public static final String ROLES_PATH = "roles";
     public static final String PASSWORD = "password";
     public static final String DEFAULT_REGION = "defaultRegion";
     public static final String USER_PATH = "users";

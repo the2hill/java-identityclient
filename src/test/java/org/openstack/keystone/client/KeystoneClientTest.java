@@ -162,11 +162,9 @@ public class KeystoneClientTest {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            Tenant t = client.retireveTenantByname(response.getToken().getId(), "bobBuilder");
-            Tenant tenant = client.retireveTenantById(response.getToken().getId(), t.getId());
+            Tenant tenant = client.retireveTenantById(response.getToken().getId(), KeystoneUtil.getProperty("tenant_id"));
             assertNotNull(tenant);
-            Token token = response.getToken();
-            System.out.println(token.getId());
+            assertEquals(KeystoneUtil.getProperty("tenant_id"), tenant.getId());
         } catch (KeystoneFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
@@ -176,14 +174,12 @@ public class KeystoneClientTest {
 
     @Test
     public void getTenantByName() throws Exception {
-        //Fails, bug in auth?
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            Tenant tenant = client.retireveTenantByname(response.getToken().getId(), "bobBuilder");
+            Tenant tenant = client.retireveTenantByname(response.getToken().getId(), KeystoneUtil.getProperty("tenant_name"));
             assertNotNull(tenant);
-            Token token = response.getToken();
-            System.out.println(token.getId());
+            assertEquals(KeystoneUtil.getProperty("tenant_name"), tenant.getName());
         } catch (KeystoneFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
@@ -193,16 +189,12 @@ public class KeystoneClientTest {
 
     @Test
     public void getRolesByTenantId() throws Exception {
-        //Fails, bug in auth? or i dont have right permissions
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            Tenant tenant = client.retireveTenantByname(response.getToken().getId(), "bobBuilder");
-
-            RoleList roles = client.retireveRolesByTenantId(response.getToken().getId(), tenant.getId(), response.getUser().getId());
+            User user = client.listUserByName(response.getToken().getId(), KeystoneUtil.getProperty("username"));
+            RoleList roles = client.retireveRolesByTenantId(response.getToken().getId(), KeystoneUtil.getProperty("tenant_id"), user.getId());
             assertNotNull(roles);
-            Token token = response.getToken();
-            System.out.println(token.getId());
         } catch (KeystoneFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
@@ -407,7 +399,7 @@ public class KeystoneClientTest {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            GroupList groups = client.listGroups(response.getToken().getId());
+            GroupList groups = client.listGroups("my-simple-demo-token");
             assertNotNull(groups);
             System.out.println(groups.toString());
         } catch (KeystoneFault ex) {
@@ -422,7 +414,7 @@ public class KeystoneClientTest {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            Group group = client.addGroup(response.getToken().getId(), "tester", "this is a test");
+            Group group = client.addGroup("my-simple-demo-token", "tester", "this is a test");
             assertNotNull(group);
             assertEquals("tester", group.getName());
             boolean isGdeleted = client.deleteGroup(response.getToken().getId(), group.getId());
@@ -439,8 +431,8 @@ public class KeystoneClientTest {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            Group group = client.addGroup(response.getToken().getId(), "newgroup", "thisOne is new");
-            Group g = client.retrieveGroup(response.getToken().getId(), group.getId());
+            GroupList groups = client.listGroups(response.getToken().getId(), null, null, "newgroup");
+            Group g = client.retrieveGroup("my-simple-demo-token", groups.getGroup().get(0).getId());
             assertNotNull(g);
             assertEquals("newgroup", g.getName());
             boolean isGdeleted = client.deleteGroup(response.getToken().getId(), g.getId());
@@ -457,7 +449,7 @@ public class KeystoneClientTest {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            GroupList groups = client.listGroups(response.getToken().getId(), null, null, "newgroup");
+            GroupList groups = client.listGroups("my-simple-demo-token", null, null, "newgroup");
 
 //            Group group = client.addGroup(response.getToken().getId(), "newgroup", "thisOne is new");
 //            assertNotNull(group);
