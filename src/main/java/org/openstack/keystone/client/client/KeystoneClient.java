@@ -461,7 +461,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public User listUserById(String token, String userId) throws KeystoneFault, URISyntaxException {
-        return listUserByName(url, token, userId);
+        return listUserById(url, token, userId);
     }
 
     /**

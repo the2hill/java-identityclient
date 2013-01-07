@@ -16,12 +16,11 @@ import org.openstack.keystone.client.tenant.Tenants;
 import org.openstack.keystone.client.token.AuthenticateResponse;
 import org.openstack.keystone.client.token.Token;
 import org.openstack.keystone.client.user.User;
+import org.openstack.keystone.client.user.UserList;
 
 import java.net.URISyntaxException;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class KeystoneClientTest {
     private static TestUser testUser;
@@ -282,6 +281,50 @@ public class KeystoneClientTest {
     }
 
     @Test
+    public void getUserByName() throws Exception {
+        try {
+            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
+            User updatedUserB = client.listUserByName(response.getToken().getId(), "bobBuilder");
+            assertNotNull(updatedUserB);
+            assertEquals("bobBuilder", updatedUserB.getUsername());
+        } catch (KeystoneFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void getUserById() throws Exception {
+        try {
+            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
+            User updatedUserB = client.listUserById(response.getToken().getId(), KeystoneUtil.getProperty("user_id"));
+            assertNotNull(updatedUserB);
+            assertEquals(KeystoneUtil.getProperty("username"), updatedUserB.getUsername());
+        } catch (KeystoneFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void getUsers() throws Exception {
+        try {
+            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
+            UserList updatedUserB = client.listUsers(response.getToken().getId());
+            assertNotNull(updatedUserB);
+        } catch (KeystoneFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
     public void updateUser() throws Exception {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
@@ -352,7 +395,7 @@ public class KeystoneClientTest {
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
             client.deleteUserCredentials(response.getToken().getId(), userb.getId());
-            Credentials after = client.listCredentials(response.getToken().getId(), "bobBuilder");
+            Credentials after = client.listCredentials(response.getToken().getId(), userb.getId());
             assertNotNull(after);
             assertEquals(null, after.getApiKeyCredentials().getApiKey());
             assertEquals("bobBuilder", after.getApiKeyCredentials().getUsername());
