@@ -271,7 +271,7 @@ public class KeystoneClientTest {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            User user = client.addUser(response.getToken().getId(), "bobBuilder", "password", true, "thejavelinman@gmail.com", "DFW");
+            User user = client.addUser(response.getToken().getId(), "bobBuilder", "password", true, "the@mail.com", "DFW");
             assertNotNull(user);
         } catch (KeystoneFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
@@ -380,7 +380,9 @@ public class KeystoneClientTest {
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
             AuthenticateResponse user = client.updateUserCredentials(response.getToken().getId(), userb.getId(), "asdfa-sdfsdf-sdfsd-sdfsdf-sdfsdf");
+            Credentials after = client.listCredentials(response.getToken().getId(), userb.getId());
             assertNotNull(user);
+            assertEquals("asdfa-sdfsdf-sdfsd-sdfsdf-sdfsdf", after.getApiKeyCredentials().getApiKey());
         } catch (KeystoneFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
@@ -396,9 +398,7 @@ public class KeystoneClientTest {
             User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
             client.deleteUserCredentials(response.getToken().getId(), userb.getId());
             Credentials after = client.listCredentials(response.getToken().getId(), userb.getId());
-            assertNotNull(after);
-            assertEquals(null, after.getApiKeyCredentials().getApiKey());
-            assertEquals("bobBuilder", after.getApiKeyCredentials().getUsername());
+            assertNull(after);
         } catch (KeystoneFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getDetails());
@@ -442,7 +442,7 @@ public class KeystoneClientTest {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            GroupList groups = client.listGroups("my-simple-demo-token");
+            GroupList groups = client.listGroups(response.getToken().getId());
             assertNotNull(groups);
             System.out.println(groups.toString());
         } catch (KeystoneFault ex) {
@@ -457,9 +457,9 @@ public class KeystoneClientTest {
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            Group group = client.addGroup("my-simple-demo-token", "tester", "this is a test");
+            Group group = client.addGroup(response.getToken().getId(), "ksctestgroup", "this is a test for jksc");
             assertNotNull(group);
-            assertEquals("tester", group.getName());
+            assertEquals("ksctestgroup", group.getName());
             boolean isGdeleted = client.deleteGroup(response.getToken().getId(), group.getId());
             assertTrue(isGdeleted);
         } catch (KeystoneFault ex) {
@@ -470,14 +470,33 @@ public class KeystoneClientTest {
     }
 
     @Test
-    public void getGroup() throws Exception {
+    public void getGroupByName() throws Exception {
+        //bug in auth fails to get group by name
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            GroupList groups = client.listGroups(response.getToken().getId(), null, null, "newgroup");
-            Group g = client.retrieveGroup("my-simple-demo-token", groups.getGroup().get(0).getId());
+            GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+            assertNotNull(groups);
+            assertEquals("ksctestgroup", groups.getGroup().get(0).getName());
+            boolean isGdeleted = client.deleteGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
+            assertTrue(isGdeleted);
+        } catch (KeystoneFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void getGroupById() throws Exception {
+        //bug in auth fails to get group by name
+        try {
+            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
+            GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+            Group g = client.retrieveGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
             assertNotNull(g);
-            assertEquals("newgroup", g.getName());
+            assertEquals("ksctestgroup", g.getName());
             boolean isGdeleted = client.deleteGroup(response.getToken().getId(), g.getId());
             assertTrue(isGdeleted);
         } catch (KeystoneFault ex) {
@@ -489,17 +508,14 @@ public class KeystoneClientTest {
 
     @Test
     public void deleteGroup() throws Exception {
+        //Fails.. bug in auth retrieve group by name
         try {
             KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
-            GroupList groups = client.listGroups("my-simple-demo-token", null, null, "newgroup");
-
-//            Group group = client.addGroup(response.getToken().getId(), "newgroup", "thisOne is new");
-//            assertNotNull(group);
-//            assertEquals("newgroup", group.getName());
+            GroupList groups = client.listGroups("my-simple-demo-token", null, null, "ksctestgroup");
             Group group = client.retrieveGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
-//            boolean isGdeleted = client.deleteGroup(response.getToken().getId(), group.getId());
-//            assertTrue(isGdeleted);
+            boolean isGdeleted = client.deleteGroup(response.getToken().getId(), group.getId());
+            assertTrue(isGdeleted);
         } catch (KeystoneFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());

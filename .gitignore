@@ -11,6 +11,7 @@
 .project
 .classpath
 */target
+target/*
 classes/
 */target/*
 */*/target
