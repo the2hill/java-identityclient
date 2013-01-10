@@ -7,7 +7,7 @@ import org.openstack.keystone.client.endpoints.EndpointList;
 import org.openstack.keystone.client.fault.KeystoneFault;
 import org.openstack.keystone.client.group.Group;
 import org.openstack.keystone.client.group.GroupList;
-import org.openstack.keystone.client.manager.KeystoneManager;
+import org.openstack.keystone.client.manager.*;
 import org.openstack.keystone.client.manager.entity.Credentials;
 import org.openstack.keystone.client.manager.impl.*;
 import org.openstack.keystone.client.roles.RoleList;
@@ -22,6 +22,11 @@ import java.net.URISyntaxException;
 
 public class KeystoneClient extends KeystoneManager {
     private final Log logger = LogFactory.getLog(KeystoneClient.class);
+    private AuthenticationResourceManager authenticationResourceManager = new AuthenticationResourceManagerImpl();
+    private TokenResourceManager tokenResourceManager = new TokenResourceManagerImpl();
+    private TenantResourceManager tenantResourceManager = new TenantResourceManagerImpl();
+    private UserResourceManager userResourceManager = new UserResourceManagerImpl();
+    private GroupResourceManager groupResourceManager = new GroupResourceManagerImpl();
 
     public KeystoneClient(String authUrl, Client client) throws KeystoneFault {
         super(authUrl, client);
@@ -61,7 +66,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public AuthenticateResponse authenticateUsernamePassword(String url, String username, String password) throws KeystoneFault, URISyntaxException {
-        return new AuthenticationResourceManagerImpl().authenticateUsernamePassword(client, url, username, password);
+        return authenticationResourceManager.authenticateUsernamePassword(client, url, username, password);
     }
 
     /**
@@ -88,7 +93,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public AuthenticateResponse authenticateTenantNameTokenId(String url, String tenantName, String tokenId) throws KeystoneFault, URISyntaxException {
-        return new AuthenticationResourceManagerImpl().authenticateTenantNameTokenId(client, url, tenantName, tokenId);
+        return authenticationResourceManager.authenticateTenantNameTokenId(client, url, tenantName, tokenId);
     }
 
     /**
@@ -117,7 +122,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public AuthenticateResponse authenticateTenantIdUsernameApiKey(String url, String tenantId, String tenantName, String tokenId) throws KeystoneFault, URISyntaxException {
-        return new AuthenticationResourceManagerImpl().authenticateTenantIdUsernameApiKey(client, url, tenantId, tenantName, tokenId);
+        return authenticationResourceManager.authenticateTenantIdUsernameApiKey(client, url, tenantId, tenantName, tokenId);
     }
 
     /**
@@ -146,7 +151,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public AuthenticateResponse authenticateTenantIdUsernamePassword(String url, String tenantId, String username, String password) throws KeystoneFault, URISyntaxException {
-        return new AuthenticationResourceManagerImpl().authenticateTenantIdUsernamePassword(client, url, tenantId, username, password);
+        return authenticationResourceManager.authenticateTenantIdUsernamePassword(client, url, tenantId, username, password);
     }
 
     /**
@@ -173,7 +178,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public AuthenticateResponse authenticateTenantIdTokenId(String url, String tenantId, String tokenId) throws KeystoneFault, URISyntaxException {
-        return new AuthenticationResourceManagerImpl().authenticateTenantIdTokenId(client, url, tenantId, tokenId);
+        return authenticationResourceManager.authenticateTenantIdTokenId(client, url, tenantId, tokenId);
     }
 
     /**
@@ -200,7 +205,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public AuthenticateResponse authenticateUsernameApiKey(String url, String tenantName, String tokenId) throws KeystoneFault, URISyntaxException {
-        return new AuthenticationResourceManagerImpl().authenticateUsernameApiKey(client, url, tenantName, tokenId);
+        return authenticationResourceManager.authenticateUsernameApiKey(client, url, tenantName, tokenId);
     }
 
     //Token requests:
@@ -245,7 +250,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public AuthenticateResponse validateToken(String url, String adminToken, String token, String tenantName) throws KeystoneFault, URISyntaxException {
-        return new TokenResourceManagerImpl().validateToken(client, url, adminToken, token, tenantName);
+        return tokenResourceManager.validateToken(client, url, adminToken, token, tenantName);
     }
 
     /**
@@ -284,7 +289,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public EndpointList retrieveEndpointsForToken(String url, String adminToken, String token) throws KeystoneFault, URISyntaxException {
-        return new TokenResourceManagerImpl().retrieveEndpointsForToken(client, url, adminToken, token);
+        return tokenResourceManager.retrieveEndpointsForToken(client, url, adminToken, token);
     }
 
     //Tenant requests:
@@ -311,7 +316,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public Tenants retrieveTenants(String url, String token) throws KeystoneFault, URISyntaxException {
-        return new TenantResourceManagerImpl().retireveTenants(client, url, token);
+        return tenantResourceManager.retireveTenants(client, url, token);
     }
 
     /**
@@ -338,7 +343,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public Tenant retireveTenantById(String url, String token, String tenantId) throws KeystoneFault, URISyntaxException {
-        return new TenantResourceManagerImpl().retireveTenantById(client, url, token, tenantId);
+        return tenantResourceManager.retireveTenantById(client, url, token, tenantId);
     }
 
     /**
@@ -365,7 +370,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public Tenant retireveTenantByName(String url, String token, String tenantName) throws KeystoneFault, URISyntaxException {
-        return new TenantResourceManagerImpl().retireveTenantByName(client, url, token, tenantName);
+        return tenantResourceManager.retireveTenantByName(client, url, token, tenantName);
     }
 
     /**
@@ -394,7 +399,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public RoleList retireveRolesByTenantId(String url, String token, String tenantName, String userId) throws KeystoneFault, URISyntaxException {
-        return new TenantResourceManagerImpl().retrieveRolesByTenantId(client, url, token, tenantName, userId);
+        return tenantResourceManager.retrieveRolesByTenantId(client, url, token, tenantName, userId);
     }
 
     //User requests:
@@ -421,7 +426,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public UserList listUsers(String url, String token) throws KeystoneFault, URISyntaxException {
-        return new UserResourceManagerImpl().listUsers(client, url, token);
+        return userResourceManager.listUsers(client, url, token);
     }
 
     /**
@@ -448,7 +453,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public User listUserByName(String url, String token, String username) throws KeystoneFault, URISyntaxException {
-        return new UserResourceManagerImpl().listUserByName(client, url, token, username);
+        return userResourceManager.listUserByName(client, url, token, username);
     }
 
     /**
@@ -475,7 +480,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public User listUserById(String url, String token, String userId) throws KeystoneFault, URISyntaxException {
-        return new UserResourceManagerImpl().listUserById(client, url, token, userId);
+        return userResourceManager.listUserById(client, url, token, userId);
     }
 
     /**
@@ -502,7 +507,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public Credentials listCredentials(String url, String token, String userId) throws KeystoneFault, URISyntaxException {
-        return new UserResourceManagerImpl().listCredentials(client, url, token, userId);
+        return userResourceManager.listCredentials(client, url, token, userId);
     }
 
     /**
@@ -556,7 +561,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws JAXBException
      */
     public User addUser(String url, String token, String username, String password, boolean enabled, String email, String region) throws KeystoneFault, URISyntaxException, JAXBException {
-        return new UserResourceManagerImpl().addUser(client, url, token, username, password, enabled, email, region);
+        return userResourceManager.addUser(client, url, token, username, password, enabled, email, region);
     }
 
 
@@ -594,7 +599,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws JAXBException
      */
     public User updateUser(String url, String token, String userId, String username, boolean enabled, String email, String region) throws KeystoneFault, URISyntaxException, JAXBException {
-        return new UserResourceManagerImpl().updateUser(client, url, token, userId, username, enabled, email, region);
+        return userResourceManager.updateUser(client, url, token, userId, username, enabled, email, region);
     }
 
     /**
@@ -625,7 +630,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws JAXBException
      */
     public User updateUserPassword(String url, String token, String userId, String password) throws KeystoneFault, URISyntaxException, JAXBException {
-        return new UserResourceManagerImpl().updateUserPassword(client, url, token, userId, password);
+        return userResourceManager.updateUserPassword(client, url, token, userId, password);
     }
 
     /**
@@ -656,7 +661,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws JAXBException
      */
     public AuthenticateResponse updateUserCredentials(String url, String token, String userId, String apiKey) throws KeystoneFault, URISyntaxException, JAXBException {
-        return new UserResourceManagerImpl().updateUserCredentials(client, url, token, userId, apiKey);
+        return userResourceManager.updateUserCredentials(client, url, token, userId, apiKey);
     }
 
     /**
@@ -683,7 +688,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws JAXBException
      */
     public void deleteUserCredentials(String url, String token, String userId) throws KeystoneFault, URISyntaxException, JAXBException {
-        new UserResourceManagerImpl().deleteUserCredentials(client, url, token, userId);
+        userResourceManager.deleteUserCredentials(client, url, token, userId);
     }
 
 
@@ -714,7 +719,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws JAXBException
      */
     public User deleteUser(String url, String token, String userId) throws KeystoneFault, URISyntaxException, JAXBException {
-        return new UserResourceManagerImpl().deleteUser(client, url, token, userId);
+        return userResourceManager.deleteUser(client, url, token, userId);
     }
 
     //Groups requests:
@@ -759,7 +764,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public GroupList listGroups(String url, String token, String marker, String limit, String name) throws KeystoneFault, URISyntaxException {
-        return new GroupResourceManagerImpl().listGroups(client, url, token, marker, limit, name);
+        return groupResourceManager.listGroups(client, url, token, marker, limit, name);
     }
 
     /**
@@ -790,7 +795,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public Group addGroup(String url, String token, String name, String description) throws KeystoneFault, URISyntaxException {
-        return new GroupResourceManagerImpl().addGroup(client, url, token, name, description);
+        return groupResourceManager.addGroup(client, url, token, name, description);
     }
 
     /**
@@ -817,7 +822,7 @@ public class KeystoneClient extends KeystoneManager {
      * @throws URISyntaxException
      */
     public Group retrieveGroup(String url, String token, String groupId) throws KeystoneFault, URISyntaxException {
-        return new GroupResourceManagerImpl().retrieveGroup(client, url, token, groupId);
+        return groupResourceManager.retrieveGroup(client, url, token, groupId);
     }
 
     /**
@@ -845,7 +850,11 @@ public class KeystoneClient extends KeystoneManager {
      * @return
      */
     public boolean deleteGroup(String url, String token, String groupId) throws KeystoneFault, URISyntaxException {
-       return new GroupResourceManagerImpl().deleteGroup(client, url, token, groupId);
+       return groupResourceManager.deleteGroup(client, url, token, groupId);
+    }
+
+    public boolean addUserToGroup(String url, String token, String groupId) throws KeystoneFault, URISyntaxException {
+        return groupResourceManager.addUserToGroup(client, url, token, groupId);
     }
 }
 

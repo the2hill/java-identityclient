@@ -159,6 +159,10 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
         return true;
     }
 
+    public boolean addUserToGroup(Client client, String url, String token, String groupId) throws KeystoneFault, URISyntaxException {
+        return true;
+    }
+
     /**
      * Generate add group request
      *

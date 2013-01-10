@@ -523,6 +523,31 @@ public class KeystoneClientTest {
         }
     }
 
+    @Test
+    public void addUserToGroup() throws Exception {
+        //Stub for now
+    }
+
+    @Test
+    public void updateGroup() throws Exception {
+        // Stub for now
+    }
+
+    @Test
+    public void listGroupsForUser() throws Exception {
+        //Stub for now
+    }
+
+    @Test
+    public void removeUserFromGroup() throws Exception {
+        //Stub for now
+    }
+
+    @Test
+    public void listUsersFromGroup() throws Exception {
+        //Stub for now
+    }
+
     private Tenants retrieveTenants(String token) throws KeystoneFault, URISyntaxException {
         KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
         return client.retrieveTenants(testUser.getTokenId());
