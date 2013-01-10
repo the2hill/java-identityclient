@@ -15,8 +15,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.net.URI;
 
 
-public abstract class ResponseManagermpl implements ResponseManager {
-    private final Log logger = LogFactory.getLog(ResponseManagermpl.class);
+public abstract class ResponseManagerImpl implements ResponseManager {
+    private final Log logger = LogFactory.getLog(ResponseManagerImpl.class);
 
     @Override
     public ClientResponse get(Client client, URI uri, String token) {
@@ -63,7 +63,11 @@ public abstract class ResponseManagermpl implements ResponseManager {
     }
 
     public boolean isResponseValid(ClientResponse response) {
-        return (response != null && (response.getStatus() == KeystoneConstants.ACCEPTED || response.getStatus() == KeystoneConstants.NON_AUTHORATIVE || response.getStatus() == KeystoneConstants.OK || response.getStatus() == KeystoneConstants.NO_CONTENT || response.getStatus() == KeystoneConstants.CREATED));
+        return (response != null && (response.getStatus() == KeystoneConstants.ACCEPTED
+                || response.getStatus() == KeystoneConstants.NON_AUTHORATIVE
+                || response.getStatus() == KeystoneConstants.OK
+                || response.getStatus() == KeystoneConstants.NO_CONTENT
+                || response.getStatus() == KeystoneConstants.CREATED));
     }
 
     public boolean handleBadResponse(ClientResponse response) throws KeystoneFault {

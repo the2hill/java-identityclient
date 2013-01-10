@@ -18,7 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
-public class AuthenticationResourceManagerImpl extends ResponseManagermpl implements AuthenticationResourceManager {
+public class AuthenticationResourceManagerImpl extends ResponseManagerImpl implements AuthenticationResourceManager {
     public AuthenticationRequest authenticationRequest;
 
     public AuthenticationResourceManagerImpl(AuthenticationRequest authenticationRequest) {

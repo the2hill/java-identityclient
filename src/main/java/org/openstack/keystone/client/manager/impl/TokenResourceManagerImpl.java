@@ -15,7 +15,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class TokenResourceManagerImpl extends ResponseManagermpl implements TokenResourceManager{
+public class TokenResourceManagerImpl extends ResponseManagerImpl implements TokenResourceManager{
 
 
     /**

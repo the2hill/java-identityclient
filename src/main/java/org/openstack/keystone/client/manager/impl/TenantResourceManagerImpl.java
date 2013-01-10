@@ -16,7 +16,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class TenantResourceManagerImpl extends ResponseManagermpl implements TenantResourceManager {
+public class TenantResourceManagerImpl extends ResponseManagerImpl implements TenantResourceManager {
 
 
     /**

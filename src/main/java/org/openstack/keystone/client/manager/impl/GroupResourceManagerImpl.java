@@ -19,7 +19,7 @@ import javax.xml.bind.JAXBException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class GroupResourceManagerImpl extends ResponseManagermpl implements GroupResourceManager {
+public class GroupResourceManagerImpl extends ResponseManagerImpl implements GroupResourceManager {
 
     /**
      * List available groups

@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class UserResourceManagerImpl extends ResponseManagermpl implements UserResourceManager {
+public class UserResourceManagerImpl extends ResponseManagerImpl implements UserResourceManager {
 
     /**
      * List users by token
