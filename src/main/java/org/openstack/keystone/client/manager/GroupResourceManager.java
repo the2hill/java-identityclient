@@ -19,5 +19,5 @@ public interface GroupResourceManager {
 
     public boolean deleteGroup(Client client, String url, String token, String groupId) throws KeystoneFault, URISyntaxException;
 
-    public boolean addUserToGroup(Client client, String url, String token, String groupId) throws KeystoneFault, URISyntaxException;
+    public boolean addUserToGroup(Client client, String url, String token, String userId, String groupId) throws KeystoneFault, URISyntaxException;
 }

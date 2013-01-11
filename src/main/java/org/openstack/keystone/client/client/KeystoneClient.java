@@ -853,8 +853,8 @@ public class KeystoneClient extends KeystoneManager {
        return groupResourceManager.deleteGroup(client, url, token, groupId);
     }
 
-    public boolean addUserToGroup(String url, String token, String groupId) throws KeystoneFault, URISyntaxException {
-        return groupResourceManager.addUserToGroup(client, url, token, groupId);
+    public boolean addUserToGroup(String url, String token, String userId, String groupId) throws KeystoneFault, URISyntaxException {
+        return groupResourceManager.addUserToGroup(client, url, token, userId, groupId);
     }
 }
 
