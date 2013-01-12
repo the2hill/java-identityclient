@@ -9,6 +9,8 @@ import java.util.Properties;
 public class KeystoneConstants {
     private static final Log logger = LogFactory.getLog(KeystoneConstants.class);
 
+    //TODO: clean this up a bit, find better way to do this?
+
     /** HTTP Header token that identifies Accepted status **/
     public static final int ACCEPTED = 200;
     /** HTTP Header token that identifies Create status **/
@@ -65,6 +67,7 @@ public class KeystoneConstants {
     /**Query params**/
     public static final String BELONGS_TO = "belongsTo";
     public static final String NAME = "name";
+    public static final String SERVICE_ID = "serviceId";
     public static final String MARKER = "marker";
     public static final String LIMIT = "limit";
 

@@ -24,7 +24,7 @@ import static junit.framework.Assert.*;
 
 public class KeystoneClientTest {
     private static TestUser testUser;
-    //Order matters(Need to get a token based off of other credentials, those that need token for authentication need to run another first)...
+    //Order matters(Need to get a token based off of other credentials, those that need token for authentication may need to run another first)...
 
     @Test
     public void validateCloudUsernamePassword() throws Exception {
@@ -546,6 +546,21 @@ public class KeystoneClientTest {
     @Test
     public void listUsersFromGroup() throws Exception {
         //Stub for now
+    }
+
+
+    @Test
+    public void listRoles() throws Exception {
+        try {
+            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
+            RoleList roles = client.listRoles(response.getToken().getId());
+            assertNotNull(roles);
+        } catch (KeystoneFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
     }
 
     private Tenants retrieveTenants(String token) throws KeystoneFault, URISyntaxException {

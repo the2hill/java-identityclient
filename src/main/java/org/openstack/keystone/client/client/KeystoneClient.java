@@ -27,6 +27,7 @@ public class KeystoneClient extends KeystoneManager {
     private TenantResourceManager tenantResourceManager = new TenantResourceManagerImpl();
     private UserResourceManager userResourceManager = new UserResourceManagerImpl();
     private GroupResourceManager groupResourceManager = new GroupResourceManagerImpl();
+    private RolesResourceManager rolesResourceManager = new RolesResourceManagerImpl();
 
     public KeystoneClient(String authUrl, Client client) throws KeystoneFault {
         super(authUrl, client);
@@ -853,8 +854,45 @@ public class KeystoneClient extends KeystoneManager {
        return groupResourceManager.deleteGroup(client, url, token, groupId);
     }
 
+    /**
+     * Add user to group
+     *
+     * @param token
+     * @param userId
+     * @param groupId
+     * @return
+     * @throws KeystoneFault
+     * @throws URISyntaxException
+     */
+    public boolean addUserToGroup(String token, String userId, String groupId) throws KeystoneFault, URISyntaxException {
+        return addUserToGroup(url, token, userId, groupId);
+    }
+
+    /**
+     * Add user to group with specific url
+     *
+     * @param url
+     * @param token
+     * @param userId
+     * @param groupId
+     * @return
+     * @throws KeystoneFault
+     * @throws URISyntaxException
+     */
     public boolean addUserToGroup(String url, String token, String userId, String groupId) throws KeystoneFault, URISyntaxException {
         return groupResourceManager.addUserToGroup(client, url, token, userId, groupId);
+    }
+
+
+    /********************************************************************************************************************************/
+    /********************************************************************************************************************************/
+    /**********************************************************ROLES*****************************************************************/
+    /********************************************************************************************************************************/
+    /********************************************************************************************************************************/
+
+
+      public RoleList listRoles(String token) throws KeystoneFault, URISyntaxException {
+        return rolesResourceManager.listroles(client, url, token);
     }
 }
 

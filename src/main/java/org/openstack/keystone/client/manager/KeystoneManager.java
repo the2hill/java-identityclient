@@ -12,7 +12,7 @@ public abstract class KeystoneManager {
 
     /**
      * @param authUrl the url to the KeyStone auth service
-     * @param client  the client used to talk to KeyStone
+     * @param client the Jersey client used to talk to KeyStone
      */
     public KeystoneManager(String authUrl, Client client) throws KeystoneFault {
         this.url = authUrl;
@@ -23,7 +23,7 @@ public abstract class KeystoneManager {
     }
 
     /**
-     * This method will create the clients web resource based on the auth_public_uri
+     * This method will create the clients web resource based on the auth uri
      * found in the properties file
      *
      * @param authUrl the url to the KeyStone auth service

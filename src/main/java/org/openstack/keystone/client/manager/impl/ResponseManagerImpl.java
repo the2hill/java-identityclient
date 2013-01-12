@@ -51,7 +51,8 @@ public abstract class ResponseManagerImpl implements ResponseManager {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override public ClientResponse delete(Client client, URI uri, String token) {
+    @Override
+    public ClientResponse delete(Client client, URI uri, String token) {
         return client.resource(uri).type(MediaType.APPLICATION_XML_TYPE)
                 .header(KeystoneConstants.X_TOKEN_HEADER, token)
                 .accept(MediaType.APPLICATION_XML_TYPE)
