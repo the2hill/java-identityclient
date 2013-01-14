@@ -891,6 +891,14 @@ public class KeystoneClient extends KeystoneManager {
     /********************************************************************************************************************************/
 
 
+    /**
+     * List roles
+     *
+     * @param token
+     * @return
+     * @throws KeystoneFault
+     * @throws URISyntaxException
+     */
       public RoleList listRoles(String token) throws KeystoneFault, URISyntaxException {
         return rolesResourceManager.listroles(client, url, token);
     }
