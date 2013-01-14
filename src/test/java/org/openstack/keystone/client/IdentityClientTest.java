@@ -2,7 +2,7 @@ package org.openstack.keystone.client;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openstack.keystone.client.client.KeystoneClient;
+import org.openstack.keystone.client.client.IdentityClient;
 import org.openstack.keystone.client.common.util.KeystoneUtil;
 import org.openstack.keystone.client.endpoints.EndpointList;
 import org.openstack.keystone.client.entity.TestUser;
@@ -22,13 +22,13 @@ import java.net.URISyntaxException;
 
 import static junit.framework.Assert.*;
 
-public class KeystoneClientTest {
+public class IdentityClientTest {
     private static TestUser testUser;
     //Order matters(Need to get a token based off of other credentials, those that need token for authentication may need to run another first)...
 
     @Test
     public void validateCloudUsernamePassword() throws Exception {
-        KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
         try {
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("username"), KeystoneUtil.getProperty("password"));
             assertNotNull(response);
@@ -45,7 +45,7 @@ public class KeystoneClientTest {
 
     @Test
     public void validateCloudUsernameTenantIdAndPassword() throws Exception {
-        KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
         try {
             AuthenticateResponse response = client.authenticateTenantIdUsernamePassword(KeystoneUtil.getProperty("tenant_id"), KeystoneUtil.getProperty("username"), KeystoneUtil.getProperty("password"));
             assertNotNull(response);
@@ -61,7 +61,7 @@ public class KeystoneClientTest {
 
     @Test
     public void validateTenantNameTokenId() throws Exception {
-        KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
         try {
             assertNotNull(testUser.getTokenId());
             AuthenticateResponse response = client.authenticateTenantNameTokenId(KeystoneUtil.getProperty("tenant_id"), testUser.getTokenId());
@@ -78,7 +78,7 @@ public class KeystoneClientTest {
 
     @Test
     public void validateTenantIdTokenId() throws Exception {
-        KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
         try {
             assertNotNull(testUser.getTokenId());
             AuthenticateResponse response = client.authenticateTenantIdTokenId(String.valueOf(KeystoneUtil.getIntProperty("tenant_id")), testUser.getTokenId());
@@ -95,7 +95,7 @@ public class KeystoneClientTest {
 
     @Test
     public void validateCloudUsernameApiKey() throws Exception {
-        KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
         try {
             AuthenticateResponse response = client.authenticateUsernameApiKey(KeystoneUtil.getProperty("username"), KeystoneUtil.getProperty("key"));
             assertNotNull(response);
@@ -113,7 +113,7 @@ public class KeystoneClientTest {
 
     @Test
     public void validateCloudTenantIdUsernameApiKey() throws Exception {
-        KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
         try {
             AuthenticateResponse response = client.authenticateTenantIdUsernameApiKey(String.valueOf(KeystoneUtil.getIntProperty("tenant_id")), KeystoneUtil.getProperty("username"), KeystoneUtil.getProperty("key"));
             assertNotNull(response);
@@ -144,7 +144,7 @@ public class KeystoneClientTest {
 
     @Test
     public void getTenantsWithAdminAccount() throws Exception {
-        KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
         AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
         try {
             Tenants tenants = client.retrieveTenants(response.getToken().getId());
@@ -159,7 +159,7 @@ public class KeystoneClientTest {
     @Test
     public void getTenantById() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             Tenant tenant = client.retireveTenantById(response.getToken().getId(), KeystoneUtil.getProperty("tenant_id"));
             assertNotNull(tenant);
@@ -174,7 +174,7 @@ public class KeystoneClientTest {
     @Test
     public void getTenantByName() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             Tenant tenant = client.retireveTenantByname(response.getToken().getId(), KeystoneUtil.getProperty("tenant_name"));
             assertNotNull(tenant);
@@ -189,7 +189,7 @@ public class KeystoneClientTest {
     @Test
     public void getRolesByTenantId() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User user = client.listUserByName(response.getToken().getId(), KeystoneUtil.getProperty("username"));
             RoleList roles = client.retireveRolesByTenantId(response.getToken().getId(), KeystoneUtil.getProperty("tenant_id"), user.getId());
@@ -204,7 +204,7 @@ public class KeystoneClientTest {
 //    @Test
 //    public void validateToken() throws Exception {
 //        try {
-//            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+//            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
 //            AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
 //            User user = client.listUserByName(response.getToken().getId(), KeystoneUtil.getProperty("username"));
 //            Credentials userCreds = client.listCredentials(response.getToken().getId(), user.getId());
@@ -223,7 +223,7 @@ public class KeystoneClientTest {
     @Test
     public void validateTokenForAnotherUser() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             AuthenticateResponse responseU = client.authenticateUsernamePassword(KeystoneUtil.getProperty("username"), KeystoneUtil.getProperty("password"));
             AuthenticateResponse roles = client.validateToken(response.getToken().getId(), responseU.getToken().getId(), responseU.getToken().getTenant().getName());
@@ -240,7 +240,7 @@ public class KeystoneClientTest {
     @Test
     public void retrieveEndpointsForToken() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse responseU = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             EndpointList endpointList = client.retrieveEndpointsForToken(responseU.getToken().getId());
             assertNotNull(endpointList);
@@ -254,7 +254,7 @@ public class KeystoneClientTest {
     @Test
     public void retrieveEndpointsForTokenWithAdminAccount() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             AuthenticateResponse responseU = client.authenticateUsernamePassword(KeystoneUtil.getProperty("username"), KeystoneUtil.getProperty("password"));
             EndpointList endpointList = client.retrieveEndpointsForToken(response.getToken().getId(), responseU.getToken().getId());
@@ -269,7 +269,7 @@ public class KeystoneClientTest {
     @Test
     public void addUser() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User user = client.addUser(response.getToken().getId(), "bobBuilder", "password", true, "the@mail.com", "DFW");
             assertNotNull(user);
@@ -283,7 +283,7 @@ public class KeystoneClientTest {
     @Test
     public void getUserByName() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User updatedUserB = client.listUserByName(response.getToken().getId(), "bobBuilder");
             assertNotNull(updatedUserB);
@@ -298,7 +298,7 @@ public class KeystoneClientTest {
     @Test
     public void getUserById() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User updatedUserB = client.listUserById(response.getToken().getId(), KeystoneUtil.getProperty("user_id"));
             assertNotNull(updatedUserB);
@@ -313,7 +313,7 @@ public class KeystoneClientTest {
     @Test
     public void getUsers() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             UserList updatedUserB = client.listUsers(response.getToken().getId());
             assertNotNull(updatedUserB);
@@ -327,7 +327,7 @@ public class KeystoneClientTest {
     @Test
     public void updateUser() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
             User user = client.updateUser(response.getToken().getId(), userb.getId(), "bobBuilder", true, "cheese@mail.com", "DFW");
@@ -344,7 +344,7 @@ public class KeystoneClientTest {
     @Test
     public void updateUserWithEmailOnly() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
             User user = client.updateUser(response.getToken().getId(), userb.getId(), null, true, "bob@mail.com", null);
@@ -361,7 +361,7 @@ public class KeystoneClientTest {
     @Test
     public void updateUserPassword() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
             User user = client.updateUserPassword(response.getToken().getId(), userb.getId(), "bobBuilder1");
@@ -376,7 +376,7 @@ public class KeystoneClientTest {
     @Test
     public void updateUserCredentials() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
             AuthenticateResponse user = client.updateUserCredentials(response.getToken().getId(), userb.getId(), "asdfa-sdfsdf-sdfsd-sdfsdf-sdfsdf");
@@ -393,7 +393,7 @@ public class KeystoneClientTest {
     @Test
     public void deleteUserCredentials() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
             client.deleteUserCredentials(response.getToken().getId(), userb.getId());
@@ -409,7 +409,7 @@ public class KeystoneClientTest {
     @Test
     public void deleteUser() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User bob = client.listUserByName(response.getToken().getId(), "bobBuilder");
             User user = client.deleteUser(response.getToken().getId(), bob.getId());
@@ -424,7 +424,7 @@ public class KeystoneClientTest {
     @Test
     public void listCredentials() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             User bob = client.listUserByName(response.getToken().getId(), KeystoneUtil.getProperty("username"));
             Credentials credentials = client.listCredentials(response.getToken().getId(), bob.getId());
@@ -440,7 +440,7 @@ public class KeystoneClientTest {
     @Test
     public void listGroups() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             GroupList groups = client.listGroups(response.getToken().getId());
             assertNotNull(groups);
@@ -455,7 +455,7 @@ public class KeystoneClientTest {
     @Test
     public void addGroup() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             Group group = client.addGroup(response.getToken().getId(), "ksctestgroup", "this is a test for jksc");
             assertNotNull(group);
@@ -473,7 +473,7 @@ public class KeystoneClientTest {
     public void getGroupByName() throws Exception {
         //bug in auth fails to get group by name
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
             assertNotNull(groups);
@@ -491,7 +491,7 @@ public class KeystoneClientTest {
     public void getGroupById() throws Exception {
         //bug in auth fails to get group by name
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
             Group g = client.retrieveGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
@@ -510,7 +510,7 @@ public class KeystoneClientTest {
     public void deleteGroup() throws Exception {
         //Fails.. bug in auth retrieve group by name
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             GroupList groups = client.listGroups("my-simple-demo-token", null, null, "ksctestgroup");
             Group group = client.retrieveGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
@@ -525,7 +525,10 @@ public class KeystoneClientTest {
 
     @Test
     public void addUserToGroup() throws Exception {
-        //Stub for now
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
+        AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        assertTrue(client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId()));
     }
 
     @Test
@@ -552,7 +555,7 @@ public class KeystoneClientTest {
     @Test
     public void listRoles() throws Exception {
         try {
-            KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+            IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
             RoleList roles = client.listRoles(response.getToken().getId());
             assertNotNull(roles);
@@ -564,7 +567,7 @@ public class KeystoneClientTest {
     }
 
     private Tenants retrieveTenants(String token) throws KeystoneFault, URISyntaxException {
-        KeystoneClient client = new KeystoneClient(KeystoneUtil.getProperty("auth_stag_url"));
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
         return client.retrieveTenants(testUser.getTokenId());
 
     }

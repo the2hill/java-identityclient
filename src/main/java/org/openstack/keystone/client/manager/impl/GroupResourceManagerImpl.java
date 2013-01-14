@@ -31,7 +31,7 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
      * @throws KeystoneFault
      * @throws URISyntaxException
      */
-    @Override
+
     public GroupList listGroups(Client client, String url, String token) throws KeystoneFault, URISyntaxException {
         return listGroups(client, url, token, null, null, null);
     }
@@ -173,6 +173,18 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
      */
     @Override
     public boolean addUserToGroup(Client client, String url, String token, String userId, String groupId) throws KeystoneFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            response = put(client, new URI(url + KeystoneConstants.RAX_GROUP + "/" + groupId
+                    + "/" + KeystoneConstants.USER_PATH + "/" + userId), token, null);
+        } catch (UniformInterfaceException ux) {
+            throw KeystoneResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+
         return true;
     }
 

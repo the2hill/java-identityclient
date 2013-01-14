@@ -47,8 +47,12 @@ public abstract class ResponseManagerImpl implements ResponseManager {
                 .post(ClientResponse.class, body);
     }
 
-    @Override public ClientResponse put(Client client, URI uri, String body) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    @Override
+    public ClientResponse put(Client client, URI uri, String token, String body) {
+        return client.resource(uri).type(MediaType.APPLICATION_XML_TYPE)
+                .header(KeystoneConstants.X_TOKEN_HEADER, token)
+                .accept(MediaType.APPLICATION_XML_TYPE)
+                .post(ClientResponse.class, body);
     }
 
     @Override
@@ -60,7 +64,7 @@ public abstract class ResponseManagerImpl implements ResponseManager {
     }
 
     @Override public ClientResponse head(Client client, URI uri, String body) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     public boolean isResponseValid(ClientResponse response) {
