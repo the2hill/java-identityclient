@@ -22,7 +22,7 @@ import java.net.URISyntaxException;
 
 import static junit.framework.Assert.*;
 
-public class KeystoneClientTest {
+public class IdentityClientTest {
     private static TestUser testUser;
     //Order matters(Need to get a token based off of other credentials, those that need token for authentication may need to run another first)...
 
