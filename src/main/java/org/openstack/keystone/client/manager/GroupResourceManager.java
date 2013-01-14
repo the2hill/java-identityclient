@@ -9,8 +9,6 @@ import java.net.URISyntaxException;
 
 public interface GroupResourceManager {
 
-    public GroupList listGroups(Client client, String url, String token) throws KeystoneFault, URISyntaxException;
-
     public GroupList listGroups(Client client, String url, String token, String marker, String limit, String name) throws KeystoneFault, URISyntaxException;
 
     public Group addGroup(Client client, String url, String token, String name, String description) throws KeystoneFault, URISyntaxException;

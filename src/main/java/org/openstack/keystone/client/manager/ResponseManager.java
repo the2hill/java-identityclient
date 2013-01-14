@@ -15,7 +15,7 @@ public interface ResponseManager {
 
     public ClientResponse post(Client client, URI uri, String token, String body);
 
-    public ClientResponse put(Client client, URI uri, String body);
+    public ClientResponse put(Client client, URI uri, String token, String body);
 
     public ClientResponse delete(Client client, URI uri, String token);
 

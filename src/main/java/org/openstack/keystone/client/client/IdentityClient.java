@@ -20,8 +20,8 @@ import org.openstack.keystone.client.user.UserList;
 import javax.xml.bind.JAXBException;
 import java.net.URISyntaxException;
 
-public class KeystoneClient extends KeystoneManager {
-    private final Log logger = LogFactory.getLog(KeystoneClient.class);
+public class IdentityClient extends KeystoneManager {
+    private final Log logger = LogFactory.getLog(IdentityClient.class);
     private AuthenticationResourceManager authenticationResourceManager = new AuthenticationResourceManagerImpl();
     private TokenResourceManager tokenResourceManager = new TokenResourceManagerImpl();
     private TenantResourceManager tenantResourceManager = new TenantResourceManagerImpl();
@@ -29,15 +29,15 @@ public class KeystoneClient extends KeystoneManager {
     private GroupResourceManager groupResourceManager = new GroupResourceManagerImpl();
     private RolesResourceManager rolesResourceManager = new RolesResourceManagerImpl();
 
-    public KeystoneClient(String authUrl, Client client) throws KeystoneFault {
+    public IdentityClient(String authUrl, Client client) throws KeystoneFault {
         super(authUrl, client);
     }
 
-    public KeystoneClient(String authUrl) throws KeystoneFault {
+    public IdentityClient(String authUrl) throws KeystoneFault {
         super(authUrl);
     }
 
-    public KeystoneClient() throws KeystoneFault {
+    public IdentityClient() throws KeystoneFault {
         super();
     }
 
