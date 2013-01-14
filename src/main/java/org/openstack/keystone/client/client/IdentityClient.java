@@ -768,6 +768,8 @@ public class IdentityClient extends KeystoneManager {
         return groupResourceManager.listGroups(client, url, token, marker, limit, name);
     }
 
+    public GroupList listGroups;
+
     /**
      * Add group
      *
