@@ -105,6 +105,33 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     }
 
     /**
+     * Update a Group
+     *
+     * @param client
+     * @param url
+     * @param token
+     * @param name
+     * @param description
+     * @return
+     * @throws KeystoneFault
+     * @throws URISyntaxException
+     */
+    @Override
+    public Group updateGroup(Client client, String url, String token, String groupId, String name, String description) throws KeystoneFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            response = put(client, new URI(url + KeystoneConstants.RAX_GROUP + "/" + groupId), token, buildUpdateGroupRequest(name, description));
+        } catch (JAXBException je) {
+            handleBadResponse(null);
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+        return response.getEntity(Group.class);
+    }
+
+    /**
      * Retrieve group by group id
      *
      * @param client
@@ -201,6 +228,31 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
         Group group = factory.createGroup();
         group.setDescription(description);
         group.setName(name);
+        return ResourceUtil.marshallResource(factory.createGroup(group),
+                JAXBContext.newInstance(GroupList.class)).toString();
+    }
+
+    /**
+     * Generate an update group request
+     *
+     * @param name
+     * @param description
+     * @return
+     * @throws JAXBException
+     */
+    private String buildUpdateGroupRequest(String name, String description) throws JAXBException {
+        // Figure out a better way to error out of the requiest
+        if (name == null && description == null) {
+            throw new JAXBException("");
+        }
+        ObjectFactory factory = new ObjectFactory();
+        Group group = factory.createGroup();
+        if (description != null) {
+            group.setDescription(description);
+        }
+        if (name != null) {
+            group.setName(name);
+        }
         return ResourceUtil.marshallResource(factory.createGroup(group),
                 JAXBContext.newInstance(GroupList.class)).toString();
     }

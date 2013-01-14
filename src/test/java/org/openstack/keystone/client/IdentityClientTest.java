@@ -533,7 +533,12 @@ public class IdentityClientTest {
 
     @Test
     public void updateGroup() throws Exception {
-        // Stub for now
+        IdentityClient client = new IdentityClient(KeystoneUtil.getProperty("auth_stag_url"));
+        AuthenticateResponse response = client.authenticateUsernamePassword(KeystoneUtil.getProperty("admin-un"), KeystoneUtil.getProperty("admin-pw"));
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        String name = "newTestGroupName";
+        Group group = client.updateGroup(response.getToken().getId(), groups.getGroup().get(0).getId(), null, name);
+        assertTrue(group.getName().equals(name));
     }
 
     @Test

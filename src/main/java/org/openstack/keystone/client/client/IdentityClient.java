@@ -635,7 +635,7 @@ public class IdentityClient extends KeystoneManager {
     }
 
     /**
-     * Update user credentials
+     * Update usercredentials
      *
      * @param token
      * @param userId
@@ -800,6 +800,35 @@ public class IdentityClient extends KeystoneManager {
     }
 
     /**
+     * Update a Group
+     *
+     * @param token
+     * @param name
+     * @param description
+     * @return
+     * @throws KeystoneFault
+     * @throws URISyntaxException
+     */
+    public Group updateGroup(String token, String groupId, String name, String description) throws KeystoneFault, URISyntaxException {
+        return updateGroup(url, token, groupId, name, description);
+    }
+
+    /**
+     * Update a Group with a specific URL
+     *
+     * @param url
+     * @param token
+     * @param name
+     * @param description
+     * @return
+     * @throws KeystoneFault
+     * @throws URISyntaxException
+     */
+    public Group updateGroup(String url, String token, String groupId, String name, String description) throws KeystoneFault, URISyntaxException {
+        return groupResourceManager.updateGroup(client, url, token, groupId, name, description);
+    }
+
+    /**
      * Retrieve group by groupId
      *
      * @param token
@@ -890,8 +919,15 @@ public class IdentityClient extends KeystoneManager {
     /********************************************************************************************************************************/
     /********************************************************************************************************************************/
 
-
-      public RoleList listRoles(String token) throws KeystoneFault, URISyntaxException {
+    /**
+     * List available roles
+     *
+     * @param token
+     * @return
+     * @throws KeystoneFault
+     * @throws URISyntaxException
+     */
+    public RoleList listRoles(String token) throws KeystoneFault, URISyntaxException {
         return rolesResourceManager.listroles(client, url, token);
     }
 }
