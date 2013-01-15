@@ -768,7 +768,49 @@ public class IdentityClient extends IdentityManager {
         return groupResourceManager.listGroups(client, url, token, marker, limit, name);
     }
 
-    public GroupList listGroups;
+    /**
+     * List groups for a user by id
+     *
+     * @param token
+     * @param id
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public GroupList listGroupsForUser(String token, String id) throws IdentityFault, URISyntaxException {
+        return listGroupsForUser(token, null, null, id);
+    }
+
+    /**
+     * List groups for a user by id and return constraints
+     *
+     * @param token
+     * @param marker
+     * @param limit
+     * @param id
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public GroupList listGroupsForUser(String token, String marker, String limit, String id) throws IdentityFault, URISyntaxException {
+        return listGroupsForUser(url, token, marker, limit, id);
+    }
+
+    /**
+     * List groups for a user by id from a specific url
+     *
+     * @param url
+     * @param token
+     * @param marker
+     * @param limit
+     * @param id
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public GroupList listGroupsForUser(String url, String token, String marker, String limit, String id) throws IdentityFault, URISyntaxException {
+        return groupResourceManager.listGroupsForUser(client, url, token, marker, limit, id);
+    }
 
     /**
      * Add group

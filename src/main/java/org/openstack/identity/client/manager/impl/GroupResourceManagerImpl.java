@@ -75,6 +75,42 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     }
 
     /**
+     * List groups for a user
+     *
+     * @param client
+     * @param url
+     * @param token
+     * @param marker
+     * @param limit
+     * @param id
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    @Override
+    public GroupList listGroupsForUser(Client client, String url, String token, String marker, String limit, String id) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+            if (marker != null) params.add(IdentityConstants.MARKER, marker);
+            if (limit != null) params.add(IdentityConstants.LIMIT, limit);
+
+            if (params.isEmpty()) {
+                response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + id), token);
+            } else {
+                response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + id + "/" + IdentityConstants.RAX), token, params);
+            }
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+        return response.getEntity(GroupList.class);
+    }
+
+    /**
      * Add group
      *
      *

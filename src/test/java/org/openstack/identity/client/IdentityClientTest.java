@@ -541,9 +541,15 @@ public class IdentityClientTest {
         assertTrue(group.getName().equals(name));
     }
 
+    // @TODO: Rewrite this without having to add the user to a group initially
     @Test
     public void listGroupsForUser() throws Exception {
-        //Stub for now
+        IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+        AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId());
+        GroupList userGroups = client.listGroupsForUser(response.getToken().getId(), response.getUser().getId());
+        assertFalse(userGroups.getGroup().isEmpty());
     }
 
     @Test

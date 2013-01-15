@@ -11,6 +11,8 @@ public interface GroupResourceManager {
 
     public GroupList listGroups(Client client, String url, String token, String marker, String limit, String name) throws IdentityFault, URISyntaxException;
 
+    public GroupList listGroupsForUser(Client client, String url, String token, String marker, String limit, String name) throws IdentityFault, URISyntaxException;
+
     public Group addGroup(Client client, String url, String token, String name, String description) throws IdentityFault, URISyntaxException;
 
     public Group updateGroup(Client client, String url, String token, String groupId, String name, String description) throws IdentityFault, URISyntaxException;

@@ -63,6 +63,7 @@ public class IdentityConstants {
     public static final String KSDAM_PATH = "OS-KSADM";
     public static final String RAX_API_CRED = "RAX-KSKEY:apiKeyCredentials";
     public static final String RAX_GROUP = "RAX-GRPADM/groups";
+    public static final String RAX = "RAX-GRPADM";
 
     /**Query params**/
     public static final String BELONGS_TO = "belongsTo";
