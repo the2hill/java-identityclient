@@ -77,7 +77,7 @@
                         xml:lang="EN"
                         xmlns="http://www.w3.org/1999/xhtml">
                         <p>
-                            The type for a Keystone-compatible service.
+                            The type for a identity-compatible service.
                         </p>
                     </xsd:documentation>
                 </annotation>

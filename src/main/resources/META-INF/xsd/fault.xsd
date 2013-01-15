@@ -12,7 +12,7 @@
          targetNamespace="http://docs.openstack.org/identity/api/v2.0"
      >
          <!-- Fault Elements -->
-         <element name="identityFault" type="identity:IdentityFault"/>
+         <element name="IdentityFault" type="identity:IdentityFault"/>
          <element name="serviceUnavailable" type="identity:ServiceUnavailableFault"/>
          <element name="badRequest" type="identity:BadRequestFault"/>
          <element name="unauthorized" type="identity:UnauthorizedFault"/>

@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>java-keystoneclient</groupId>
-    <artifactId>java-keystoneclient</artifactId>
+    <groupId>java-identityclient</groupId>
+    <artifactId>java-identityclient</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
         <dependency>
@@ -80,7 +80,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>credentials.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.credentials</packageName>
+                            <packageName>org.openstack.identity.client.credentials</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -96,7 +96,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>fault.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.faults</packageName>
+                            <packageName>org.openstack.identity.client.faults</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -112,7 +112,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>user.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.user</packageName>
+                            <packageName>org.openstack.identity.client.user</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -128,7 +128,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>token.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.token</packageName>
+                            <packageName>org.openstack.identity.client.token</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -144,7 +144,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>endpoints.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.endpoints</packageName>
+                            <packageName>org.openstack.identity.client.endpoints</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -160,7 +160,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>services.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.services</packageName>
+                            <packageName>org.openstack.identity.client.services</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -176,7 +176,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>roles.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.roles</packageName>
+                            <packageName>org.openstack.identity.client.roles</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -192,7 +192,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>tenant.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.tenant</packageName>
+                            <packageName>org.openstack.identity.client.tenant</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -208,7 +208,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>apiKeyCredentials.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.api.credentials</packageName>
+                            <packageName>org.openstack.identity.client.api.credentials</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -224,7 +224,7 @@
                             </schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                             <schemaFiles>group.xsd</schemaFiles>
-                            <packageName>org.openstack.keystone.client.group</packageName>
+                            <packageName>org.openstack.identity.client.group</packageName>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>

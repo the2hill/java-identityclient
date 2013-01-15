@@ -36,7 +36,7 @@
                     revoked at anytime and is valid for a finite duration.
                 </p>
                 <p>
-                    While Keystone supports token-based authentication in this release,
+                    While identity supports token-based authentication in this release,
                     the intention is for it to support additional protocols in the
                     future. The desire is for it to be an integration service, and not
                     a full-fledged identity store and management solution.

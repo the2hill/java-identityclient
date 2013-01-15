@@ -37,7 +37,7 @@
                     xml:lang="EN"
                     xmlns="http://www.w3.org/2001/XMLSchema">
                 <p>
-                    A Keystone User.
+                    A identity User.
                 </p>
             </xsd:documentation>
         </annotation>
