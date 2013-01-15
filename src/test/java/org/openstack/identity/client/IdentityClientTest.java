@@ -552,9 +552,14 @@ public class IdentityClientTest {
         assertFalse(userGroups.getGroup().isEmpty());
     }
 
+    //@TODO: Verify that multiple assertions can be made in the same function.
     @Test
     public void removeUserFromGroup() throws Exception {
-        //Stub for now
+        IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+        AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        assertTrue(client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId()));
+        assertTrue(client.removeUserFromGroup(response.getToken().getId(), groups.getGroup().get(0).getId(), response.getUser().getId()));
     }
 
     @Test

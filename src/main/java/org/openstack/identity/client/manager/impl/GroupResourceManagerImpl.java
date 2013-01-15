@@ -252,6 +252,35 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     }
 
     /**
+     * Remove a user from a group
+     *
+     * @param client
+     * @param url
+     * @param token
+     * @param groupId
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    @Override
+    public boolean removeUserFromGroup(Client client, String url, String token, String groupId, String userId) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            response = delete(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId
+                    + "/" + IdentityConstants.USER_PATH + "/" + userId), token);
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+
+        return true;
+    }
+
+    /**
      * Generate add group request
      *
      * @param name

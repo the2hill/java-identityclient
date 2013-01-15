@@ -22,4 +22,6 @@ public interface GroupResourceManager {
     public boolean deleteGroup(Client client, String url, String token, String groupId) throws IdentityFault, URISyntaxException;
 
     public boolean addUserToGroup(Client client, String url, String token, String userId, String groupId) throws IdentityFault, URISyntaxException;
+
+    public boolean removeUserFromGroup(Client client, String url, String token, String groupId, String userId) throws IdentityFault, URISyntaxException;
 }

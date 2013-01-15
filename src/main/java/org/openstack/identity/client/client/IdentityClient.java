@@ -958,6 +958,35 @@ public class IdentityClient extends IdentityManager {
         return groupResourceManager.addUserToGroup(client, url, token, userId, groupId);
     }
 
+    /**
+     * Remove a user from a group
+     *
+     * @param token
+     * @param groupId
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean removeUserFromGroup(String token, String groupId, String userId) throws IdentityFault, URISyntaxException {
+        return removeUserFromGroup(url, token, groupId, userId);
+    }
+
+    /**
+     * Remove a user from a group using a specific url
+     *
+     * @param url
+     * @param token
+     * @param groupId
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean removeUserFromGroup(String url, String token, String groupId, String userId) throws IdentityFault, URISyntaxException {
+        return groupResourceManager.removeUserFromGroup(client, url, token, groupId, userId);
+    }
+
 
     /********************************************************************************************************************************/
     /********************************************************************************************************************************/
