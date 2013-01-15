@@ -12,6 +12,7 @@ import org.openstack.identity.client.group.Group;
 import org.openstack.identity.client.group.GroupList;
 import org.openstack.identity.client.group.ObjectFactory;
 import org.openstack.identity.client.manager.GroupResourceManager;
+import org.openstack.identity.client.user.UserList;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.JAXBContext;
@@ -111,8 +112,43 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     }
 
     /**
-     * Add group
+     * List the users for a group
      *
+     * @param client
+     * @param url
+     * @param token
+     * @param marker
+     * @param limit
+     * @param groupId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    @Override
+    public UserList listUsersForGroup(Client client, String url, String token, String marker, String limit, String groupId) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+            if (marker != null) params.add(IdentityConstants.MARKER, marker);
+            if (limit != null) params.add(IdentityConstants.LIMIT, limit);
+
+            if (params.isEmpty()) {
+                response = get(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId + "/" + IdentityConstants.USER_PATH), token);
+            } else {
+                response = get(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId + "/" + IdentityConstants.USER_PATH), token, params);
+            }
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+        return response.getEntity(UserList.class);
+    }
+
+    /**
+     * Add group
      *
      * @param client
      * @param url

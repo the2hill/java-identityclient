@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.Client;
 import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.group.Group;
 import org.openstack.identity.client.group.GroupList;
+import org.openstack.identity.client.user.UserList;
 
 import java.net.URISyntaxException;
 
@@ -12,6 +13,8 @@ public interface GroupResourceManager {
     public GroupList listGroups(Client client, String url, String token, String marker, String limit, String name) throws IdentityFault, URISyntaxException;
 
     public GroupList listGroupsForUser(Client client, String url, String token, String marker, String limit, String name) throws IdentityFault, URISyntaxException;
+
+    public UserList listUsersForGroup(Client client, String url, String token, String marker, String limit, String groupId) throws IdentityFault, URISyntaxException;
 
     public Group addGroup(Client client, String url, String token, String name, String description) throws IdentityFault, URISyntaxException;
 
