@@ -9,6 +9,7 @@ public class ResourceUtil {
     public static StringWriter marshallResource(JAXBElement element, JAXBContext context) throws JAXBException {
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty("jaxb.formatted.output", Boolean.TRUE);
+        marshaller.setProperty("jaxb.encoding", "Unicode");
         StringWriter writer = new StringWriter();
         marshaller.marshal(element, writer);
         return writer;
