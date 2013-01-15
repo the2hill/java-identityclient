@@ -768,7 +768,93 @@ public class IdentityClient extends IdentityManager {
         return groupResourceManager.listGroups(client, url, token, marker, limit, name);
     }
 
-    public GroupList listGroups;
+    /**
+     * List groups for a user by id
+     *
+     * @param token
+     * @param id
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public GroupList listGroupsForUser(String token, String id) throws IdentityFault, URISyntaxException {
+        return listGroupsForUser(token, null, null, id);
+    }
+
+    /**
+     * List groups for a user by id and return constraints
+     *
+     * @param token
+     * @param marker
+     * @param limit
+     * @param id
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public GroupList listGroupsForUser(String token, String marker, String limit, String id) throws IdentityFault, URISyntaxException {
+        return listGroupsForUser(url, token, marker, limit, id);
+    }
+
+    /**
+     * List groups for a user by id from a specific url
+     *
+     * @param url
+     * @param token
+     * @param marker
+     * @param limit
+     * @param id
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public GroupList listGroupsForUser(String url, String token, String marker, String limit, String id) throws IdentityFault, URISyntaxException {
+        return groupResourceManager.listGroupsForUser(client, url, token, marker, limit, id);
+    }
+
+    /**
+     * List the users in a group
+     *
+     * @param token
+     * @param groupId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public UserList listUsersForGroup(String token, String groupId) throws IdentityFault, URISyntaxException {
+        return listUsersForGroup(token, null, null, groupId);
+    }
+
+    /**
+     * List the users in a group with parameters
+     *
+     * @param token
+     * @param marker
+     * @param limit
+     * @param groupId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public UserList listUsersForGroup(String token, String marker, String limit, String groupId) throws IdentityFault, URISyntaxException {
+        return listUsersForGroup(url, token, marker, limit, groupId);
+    }
+
+    /**
+     * List the users in a group with a specific URL
+     *
+     * @param url
+     * @param token
+     * @param marker
+     * @param limit
+     * @param groupId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public UserList listUsersForGroup(String url, String token, String marker, String limit, String groupId) throws IdentityFault, URISyntaxException {
+        return groupResourceManager.listUsersForGroup(client, url, token, marker, limit, groupId);
+    }
 
     /**
      * Add group
@@ -914,6 +1000,35 @@ public class IdentityClient extends IdentityManager {
      */
     public boolean addUserToGroup(String url, String token, String userId, String groupId) throws IdentityFault, URISyntaxException {
         return groupResourceManager.addUserToGroup(client, url, token, userId, groupId);
+    }
+
+    /**
+     * Remove a user from a group
+     *
+     * @param token
+     * @param groupId
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean removeUserFromGroup(String token, String groupId, String userId) throws IdentityFault, URISyntaxException {
+        return removeUserFromGroup(url, token, groupId, userId);
+    }
+
+    /**
+     * Remove a user from a group using a specific url
+     *
+     * @param url
+     * @param token
+     * @param groupId
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean removeUserFromGroup(String url, String token, String groupId, String userId) throws IdentityFault, URISyntaxException {
+        return groupResourceManager.removeUserFromGroup(client, url, token, groupId, userId);
     }
 
 

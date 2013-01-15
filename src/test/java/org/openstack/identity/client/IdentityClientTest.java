@@ -541,19 +541,36 @@ public class IdentityClientTest {
         assertTrue(group.getName().equals(name));
     }
 
+    // @TODO: Rewrite this without having to add the user to a group initially
     @Test
     public void listGroupsForUser() throws Exception {
-        //Stub for now
+        IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+        AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId());
+        GroupList userGroups = client.listGroupsForUser(response.getToken().getId(), response.getUser().getId());
+        assertFalse(userGroups.getGroup().isEmpty());
     }
 
+    //@TODO: Verify that multiple assertions can be made in the same function.
     @Test
     public void removeUserFromGroup() throws Exception {
-        //Stub for now
+        IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+        AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        assertTrue(client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId()));
+        assertTrue(client.removeUserFromGroup(response.getToken().getId(), groups.getGroup().get(0).getId(), response.getUser().getId()));
     }
 
+    //@TODO: Verify that multiple assertions can be made in the same function.
     @Test
     public void listUsersFromGroup() throws Exception {
-        //Stub for now
+        IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+        AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        assertTrue(client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId()));
+        UserList users = client.listUsersForGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
+        assertFalse(users.getUser().isEmpty());
     }
 
 

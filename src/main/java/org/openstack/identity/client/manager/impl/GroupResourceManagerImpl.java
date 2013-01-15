@@ -12,6 +12,7 @@ import org.openstack.identity.client.group.Group;
 import org.openstack.identity.client.group.GroupList;
 import org.openstack.identity.client.group.ObjectFactory;
 import org.openstack.identity.client.manager.GroupResourceManager;
+import org.openstack.identity.client.user.UserList;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.JAXBContext;
@@ -75,8 +76,79 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     }
 
     /**
-     * Add group
+     * List groups for a user
      *
+     * @param client
+     * @param url
+     * @param token
+     * @param marker
+     * @param limit
+     * @param id
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    @Override
+    public GroupList listGroupsForUser(Client client, String url, String token, String marker, String limit, String id) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+            if (marker != null) params.add(IdentityConstants.MARKER, marker);
+            if (limit != null) params.add(IdentityConstants.LIMIT, limit);
+
+            if (params.isEmpty()) {
+                response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + id), token);
+            } else {
+                response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + id + "/" + IdentityConstants.RAX), token, params);
+            }
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+        return response.getEntity(GroupList.class);
+    }
+
+    /**
+     * List the users for a group
+     *
+     * @param client
+     * @param url
+     * @param token
+     * @param marker
+     * @param limit
+     * @param groupId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    @Override
+    public UserList listUsersForGroup(Client client, String url, String token, String marker, String limit, String groupId) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+            if (marker != null) params.add(IdentityConstants.MARKER, marker);
+            if (limit != null) params.add(IdentityConstants.LIMIT, limit);
+
+            if (params.isEmpty()) {
+                response = get(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId + "/" + IdentityConstants.USER_PATH), token);
+            } else {
+                response = get(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId + "/" + IdentityConstants.USER_PATH), token, params);
+            }
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+        return response.getEntity(UserList.class);
+    }
+
+    /**
+     * Add group
      *
      * @param client
      * @param url
@@ -204,6 +276,35 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
         try {
             response = put(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId
                     + "/" + IdentityConstants.USER_PATH + "/" + userId), token, null);
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+
+        return true;
+    }
+
+    /**
+     * Remove a user from a group
+     *
+     * @param client
+     * @param url
+     * @param token
+     * @param groupId
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    @Override
+    public boolean removeUserFromGroup(Client client, String url, String token, String groupId, String userId) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            response = delete(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId
+                    + "/" + IdentityConstants.USER_PATH + "/" + userId), token);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
