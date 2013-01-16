@@ -12,6 +12,7 @@ import org.openstack.identity.client.group.GroupList;
 import org.openstack.identity.client.manager.entity.Credentials;
 import org.openstack.identity.client.roles.Role;
 import org.openstack.identity.client.roles.RoleList;
+import org.openstack.identity.client.secretqa.SecretQA;
 import org.openstack.identity.client.tenant.Tenant;
 import org.openstack.identity.client.tenant.Tenants;
 import org.openstack.identity.client.token.AuthenticateResponse;
@@ -553,7 +554,6 @@ public class IdentityClientTest {
         assertFalse(userGroups.getGroup().isEmpty());
     }
 
-    //@TODO: Verify that multiple assertions can be made in the same function.
     @Test
     public void removeUserFromGroup() throws Exception {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
@@ -563,7 +563,6 @@ public class IdentityClientTest {
         assertTrue(client.removeUserFromGroup(response.getToken().getId(), groups.getGroup().get(0).getId(), response.getUser().getId()));
     }
 
-    //@TODO: Verify that multiple assertions can be made in the same function.
     @Test
     public void listUsersFromGroup() throws Exception {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
@@ -662,10 +661,37 @@ public class IdentityClientTest {
         }
     }
 
+    @Test
+    public void listSecretQAForUser() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            SecretQA secret = client.listSecretQA(response.getToken().getId(), response.getUser().getId());
+            assertNotNull(secret.getQuestion());
+            assertNotNull(secret.getAnswer());
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void updateSecretQAForUser() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            SecretQA secret = client.listSecretQA(response.getToken().getId(), response.getUser().getId());
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
     private Tenants retrieveTenants(String token) throws IdentityFault, URISyntaxException {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         return client.retrieveTenants(testUser.getTokenId());
-
     }
 }
 

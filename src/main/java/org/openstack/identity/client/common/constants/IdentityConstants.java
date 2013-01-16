@@ -59,10 +59,12 @@ public class IdentityConstants {
     public static final String BASE_URL_REF_PATH = "baseURLRefs";
     public static final String AUTH_PATH = "auth";
     public static final String KEY_PATH = "key";
+    public static final String SECRET_QA = "secretqa";
 
     public static final String KSDAM_PATH = "OS-KSADM";
     public static final String RAX_API_CRED = "RAX-KSKEY:apiKeyCredentials";
     public static final String RAX_GROUP = "RAX-GRPADM/groups";
+    public static final String RAX_KSQA = "RAX-KSQA";
     public static final String RAX = "RAX-GRPADM";
 
     /**Query params**/

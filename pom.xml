@@ -236,6 +236,22 @@
                             <goal>xjc</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>generate-secretqa-sources</id>
+                        <configuration>
+                            <staleFile>target/sqa.staleFile</staleFile>
+                            <extension>true</extension>
+                            <schemaDirectory>
+                                ${basedir}/src/main/resources/META-INF/xsd
+                            </schemaDirectory>
+                            <clearOutputDir>false</clearOutputDir>
+                            <schemaFiles>secretqa.xsd</schemaFiles>
+                            <packageName>org.openstack.identity.client.secretqa</packageName>
+                        </configuration>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

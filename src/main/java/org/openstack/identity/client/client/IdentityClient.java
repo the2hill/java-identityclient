@@ -12,6 +12,7 @@ import org.openstack.identity.client.manager.entity.Credentials;
 import org.openstack.identity.client.manager.impl.*;
 import org.openstack.identity.client.roles.Role;
 import org.openstack.identity.client.roles.RoleList;
+import org.openstack.identity.client.secretqa.SecretQA;
 import org.openstack.identity.client.tenant.Tenant;
 import org.openstack.identity.client.tenant.Tenants;
 import org.openstack.identity.client.token.AuthenticateResponse;
@@ -29,6 +30,7 @@ public class IdentityClient extends IdentityManager {
     private UserResourceManager userResourceManager = new UserResourceManagerImpl();
     private GroupResourceManager groupResourceManager = new GroupResourceManagerImpl();
     private RolesResourceManager rolesResourceManager = new RolesResourceManagerImpl();
+    private SecretQAResourceManager secretQAResourceManager = new SecretQAResourceManagerImpl();
 
     public IdentityClient(String authUrl, Client client) throws IdentityFault {
         super(authUrl, client);
@@ -1032,12 +1034,9 @@ public class IdentityClient extends IdentityManager {
         return groupResourceManager.removeUserFromGroup(client, url, token, groupId, userId);
     }
 
-
-    /********************************************************************************************************************************/
-    /********************************************************************************************************************************/
-    /**********************************************************ROLES*****************************************************************/
-    /********************************************************************************************************************************/
-    /********************************************************************************************************************************/
+    /* ******************************************************************************************************************/
+    /*                                                         ROLES                                                    */
+    /* ******************************************************************************************************************/
 
     /**
      * List available roles
@@ -1160,7 +1159,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      */
     public RoleList listUserGlobalRoles(String url, String token, String userId) throws URISyntaxException, IdentityFault {
-        return rolesResourceManager.listUserGlobalRoles(client,  url, token, userId);
+        return rolesResourceManager.listUserGlobalRoles(client, url, token, userId);
     }
 
     /**
@@ -1248,6 +1247,45 @@ public class IdentityClient extends IdentityManager {
      */
     public boolean addGlobalRoleToUser(String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
         return rolesResourceManager.addGlobalRoleToUser(client, url, token, userId, roleId);
+    }
+
+    /* ******************************************************************************************************************/
+    /*                                                      SECRET QA                                                   */
+    /* ******************************************************************************************************************/
+
+    /**
+     * List secret question and answer
+     *
+     * @param token
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public SecretQA listSecretQA(String token, String userId) throws IdentityFault, URISyntaxException {
+        return listSecretQA(url, token, userId);
+    }
+
+    /**
+     * List secret question and answer with specific url
+     *
+     * @param url
+     * @param token
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public SecretQA listSecretQA(String url, String token, String userId) throws IdentityFault, URISyntaxException {
+        return secretQAResourceManager.listSecretQA(client, url, token, userId);
+    }
+
+    public SecretQA updateSecretQA(String token, String userId) throws IdentityFault, URISyntaxException {
+        return secretQAResourceManager.updateSecretQA(client, url, token, userId);
+    }
+
+    public SecretQA updateSecretQA(String url, String token, String userId) throws IdentityFault, URISyntaxException {
+        return secretQAResourceManager.updateSecretQA(client, url, token, userId);
     }
 }
 
