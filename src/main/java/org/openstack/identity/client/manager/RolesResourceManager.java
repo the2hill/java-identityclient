@@ -14,7 +14,7 @@ public interface RolesResourceManager {
 
     public Role getRole(Client client, String url, String token, String roleId) throws IdentityFault, URISyntaxException;
 
-    public Role addGlobalRoleToUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException;
+    public boolean addGlobalRoleToUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException;
 
     public boolean deleteGlobalRoleFromUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException;
 

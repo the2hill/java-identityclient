@@ -1191,5 +1191,63 @@ public class IdentityClient extends IdentityManager {
     public boolean deleteGlobalRoleFromUser(String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
         return rolesResourceManager.deleteGlobalRoleFromUser(client, url, token, userId, roleId);
     }
+
+    /**
+     * Add role
+     *
+     * @param token
+     * @param name
+     * @param description
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Role addRole(String token, String name, String description) throws IdentityFault, URISyntaxException {
+        return addRole(url, token, name, description);
+    }
+
+    /**
+     * Add role with specific url
+     *
+     * @param url
+     * @param token
+     * @param name
+     * @param description
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Role addRole(String url, String token, String name, String description) throws IdentityFault, URISyntaxException {
+        return rolesResourceManager.addRole(client, url, token, name, description);
+    }
+
+    /**
+     * Add global role to user
+     *
+     * @param token
+     * @param userId
+     * @param roleId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean addGlobalRoleToUser(String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
+        return addGlobalRoleToUser(url, token, userId, roleId);
+    }
+
+    /**
+     * Add global roles to user with specific url
+     *
+     * @param url
+     * @param token
+     * @param userId
+     * @param roleId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean addGlobalRoleToUser(String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
+        return rolesResourceManager.addGlobalRoleToUser(client, url, token, userId, roleId);
+    }
 }
 

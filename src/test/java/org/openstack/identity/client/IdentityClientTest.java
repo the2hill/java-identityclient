@@ -633,6 +633,35 @@ public class IdentityClientTest {
         }
     }
 
+    @Test
+    public void addRole() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            Role role = client.addRole(response.getToken().getId(), "itcNAME", "itcDescription");
+            assertNotNull(role);
+            assertEquals("itcNAME", role.getName());
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void addRoleToUser() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            boolean role = client.addGlobalRoleToUser(response.getToken().getId(), IdentityUtil.getProperty("user_id"), "1");
+            assertTrue(role);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
     private Tenants retrieveTenants(String token) throws IdentityFault, URISyntaxException {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         return client.retrieveTenants(testUser.getTokenId());
