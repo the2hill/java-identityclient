@@ -18,37 +18,6 @@ import java.net.URISyntaxException;
 public class RolesResourceManagerImpl extends ResponseManagerImpl implements RolesResourceManager {
 
     /**
-     * List all roles
-     *
-     * @param client
-     * @param url
-     * @param token
-     * @return
-     * @throws IdentityFault
-     * @throws URISyntaxException
-     */
-    @Override
-    public RoleList listroles(Client client, String url, String token) throws IdentityFault, URISyntaxException {
-        return listroles(client, url, token, null, null, null);
-    }
-
-    /**
-     * List roles with serviceId
-     *
-     * @param client
-     * @param url
-     * @param token
-     * @param serviceId
-     * @return
-     * @throws IdentityFault
-     * @throws URISyntaxException
-     */
-    @Override
-    public RoleList listroles(Client client, String url, String token, String serviceId) throws IdentityFault, URISyntaxException {
-        return listroles(client, url, token, serviceId, null, null);
-    }
-
-    /**
      * List roles with serviceId, marker and limit
      *
      * @param client
@@ -84,25 +53,62 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
         }
 
         return response.getEntity(RoleList.class);
+
     }
 
     @Override public Role addRole(Client client, String url, String token, String name, String description) throws IdentityFault, URISyntaxException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override public Role getRole(Client client, String url, String token, String roleId) throws IdentityFault, URISyntaxException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    @Override
+    public Role getRole(Client client, String url, String token, String roleId) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            response = get(client, new URI(url + IdentityConstants.KSDAM_PATH + "/" + IdentityConstants.ROLES_PATH + "/" + roleId), token);
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+
+        return response.getEntity(Role.class);
     }
 
     @Override public Role addGlobalRoleToUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override public Role deleteGlobalRoleToUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    @Override
+    public boolean deleteGlobalRoleFromUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + IdentityConstants.ROLES_PATH + "/" + IdentityConstants.KSDAM_PATH + "/" + roleId), token);
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+
+        return true;
     }
 
-    @Override public RoleList listUserGlobalRoles(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    @Override
+    public RoleList listUserGlobalRoles(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/" + IdentityConstants.ROLES_PATH), token);
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+
+        return response.getEntity(RoleList.class);
     }
 }

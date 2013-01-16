@@ -22,20 +22,6 @@ import java.net.URISyntaxException;
 
 public class GroupResourceManagerImpl extends ResponseManagerImpl implements GroupResourceManager {
 
-    /**
-     * List available groups
-     *
-     * @param client
-     * @param url
-     * @param token
-     * @return
-     * @throws IdentityFault
-     * @throws URISyntaxException
-     */
-
-    public GroupList listGroups(Client client, String url, String token) throws IdentityFault, URISyntaxException {
-        return listGroups(client, url, token, null, null, null);
-    }
 
     /**
      * List available groups with parameters

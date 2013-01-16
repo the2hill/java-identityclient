@@ -10,6 +10,7 @@ import org.openstack.identity.client.group.GroupList;
 import org.openstack.identity.client.manager.*;
 import org.openstack.identity.client.manager.entity.Credentials;
 import org.openstack.identity.client.manager.impl.*;
+import org.openstack.identity.client.roles.Role;
 import org.openstack.identity.client.roles.RoleList;
 import org.openstack.identity.client.tenant.Tenant;
 import org.openstack.identity.client.tenant.Tenants;
@@ -1047,7 +1048,148 @@ public class IdentityClient extends IdentityManager {
      * @throws URISyntaxException
      */
       public RoleList listRoles(String token) throws IdentityFault, URISyntaxException {
-        return rolesResourceManager.listroles(client, url, token);
+        return listRoles(url, token, null, null, null);
+    }
+
+    /**
+     * List available roles by serviceId
+     *
+     * @param token
+     * @param serviceId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public RoleList listRoles(String token, String serviceId) throws IdentityFault, URISyntaxException {
+        return listRoles(url, token, serviceId, null, null);
+    }
+
+    /**
+     * List available roles by serviceId and specific url
+     *
+     * @param url
+     * @param token
+     * @param serviceId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public RoleList listRoles(String url, String token, String serviceId) throws IdentityFault, URISyntaxException {
+        return listRoles(url, token, serviceId, null, null);
+    }
+
+    /**
+     * List available roles with serviceId, marker and limit
+     *
+     * @param token
+     * @param serviceId
+     * @param marker
+     * @param limit
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public RoleList listRoles(String token, String serviceId, String marker, String limit) throws IdentityFault, URISyntaxException {
+        return listRoles(url, token, serviceId, marker, limit);
+    }
+
+    /**
+     * List available roles by serviceId, marker, limit and specific url
+     *
+     * @param url
+     * @param token
+     * @param serviceId
+     * @param marker
+     * @param limit
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public RoleList listRoles(String url, String token, String serviceId, String marker, String limit) throws IdentityFault, URISyntaxException {
+        return rolesResourceManager.listroles(client, url, token, serviceId, marker, limit);
+    }
+
+    /**
+     * Retrieve role by roleId
+     *
+     * @param token
+     * @param roleId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Role getRole(String token, String roleId) throws IdentityFault, URISyntaxException {
+        return getRole(url, token, roleId);
+    }
+
+    /**
+     * Retrieve role with specific url
+     *
+     * @param url
+     * @param token
+     * @param roleId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Role getRole(String url, String token, String roleId) throws IdentityFault, URISyntaxException {
+        return rolesResourceManager.getRole(client, url, token, roleId);
+    }
+
+    /**
+     * List global roles for userId
+     *
+     * @param token
+     * @param userId
+     * @return
+     * @throws URISyntaxException
+     * @throws IdentityFault
+     */
+    public RoleList listUserGlobalRoles(String token, String userId) throws URISyntaxException, IdentityFault {
+        return listUserGlobalRoles(url, token, userId);
+    }
+
+    /**
+     * List global roles for userId with specific url
+     *
+     * @param url
+     * @param token
+     * @param userId
+     * @return
+     * @throws URISyntaxException
+     * @throws IdentityFault
+     */
+    public RoleList listUserGlobalRoles(String url, String token, String userId) throws URISyntaxException, IdentityFault {
+        return rolesResourceManager.listUserGlobalRoles(client,  url, token, userId);
+    }
+
+    /**
+     * Delete role from user by userId and roleId
+     *
+     * @param token
+     * @param userId
+     * @param roleId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean deleteGlobalRoleFromUser(String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
+        return deleteGlobalRoleFromUser(url, token, userId, roleId);
+    }
+
+    /**
+     * Delete role from user by userId and roleId with specific url
+     *
+     * @param url
+     * @param token
+     * @param userId
+     * @param roleId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean deleteGlobalRoleFromUser(String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
+        return rolesResourceManager.deleteGlobalRoleFromUser(client, url, token, userId, roleId);
     }
 }
 

@@ -10,6 +10,7 @@ import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.group.Group;
 import org.openstack.identity.client.group.GroupList;
 import org.openstack.identity.client.manager.entity.Credentials;
+import org.openstack.identity.client.roles.Role;
 import org.openstack.identity.client.roles.RoleList;
 import org.openstack.identity.client.tenant.Tenant;
 import org.openstack.identity.client.tenant.Tenants;
@@ -581,6 +582,50 @@ public class IdentityClientTest {
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
             RoleList roles = client.listRoles(response.getToken().getId());
             assertNotNull(roles);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    //TODO:Update roles tests with better cases......
+    @Test
+    public void getRole() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            Role role = client.getRole(response.getToken().getId(), "1");
+            assertNotNull(role);
+            assertEquals("identity:admin", role.getName());
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void listRolesForUser() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            RoleList roles = client.listUserGlobalRoles(response.getToken().getId(), IdentityUtil.getProperty("user_id"));
+            assertNotNull(roles);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void deleteRoleFromUser() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            boolean deleted = client.deleteGlobalRoleFromUser(response.getToken().getId(), IdentityUtil.getProperty("tenant_id"), "234455");
+            assertTrue(deleted);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());

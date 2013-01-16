@@ -8,10 +8,6 @@ import org.openstack.identity.client.roles.RoleList;
 import java.net.URISyntaxException;
 
 public interface RolesResourceManager {
-    public RoleList listroles(Client client, String url, String token) throws IdentityFault, URISyntaxException;
-
-    public RoleList listroles(Client client, String url, String token, String serviceId) throws IdentityFault, URISyntaxException;
-
     public RoleList listroles(Client client, String url, String token, String serviceId, String marker, String limit) throws IdentityFault, URISyntaxException;
 
     public Role addRole(Client client, String url, String token, String name, String description) throws IdentityFault, URISyntaxException;
@@ -20,7 +16,7 @@ public interface RolesResourceManager {
 
     public Role addGlobalRoleToUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException;
 
-    public Role deleteGlobalRoleToUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException;
+    public boolean deleteGlobalRoleFromUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException;
 
-    public RoleList listUserGlobalRoles(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException;
+    public RoleList listUserGlobalRoles(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException;
 }

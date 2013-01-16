@@ -44,7 +44,6 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
         ClientResponse response = null;
         try {
             buildUsernamePasswordCredentials(username, password);
-            System.out.println(generateAuthenticateRequest());
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH),
                     generateAuthenticateRequest());
         } catch (UniformInterfaceException ux) {
@@ -76,7 +75,6 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
         ClientResponse response = null;
         try {
             buildTenantIdTokenIdCredentials(tenantId, tokenId);
-            System.out.println(generateAuthenticateRequest());
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH), generateAuthenticateRequest());
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
@@ -107,7 +105,6 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
         ClientResponse response = null;
         try {
             buildTenantNameTokenIdCredentials(tenantName, tokenId);
-            System.out.println(generateAuthenticateRequest());
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH), generateAuthenticateRequest());
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
@@ -200,7 +197,6 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
         ClientResponse response = null;
         try {
             buildTenantIdUsernamePasswordCredentials(tenantId, username, password);
-            System.out.println(generateAuthenticateRequest());
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH), generateAuthenticateRequest());
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
