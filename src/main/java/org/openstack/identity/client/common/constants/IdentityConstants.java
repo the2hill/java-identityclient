@@ -66,6 +66,8 @@ public class IdentityConstants {
     public static final String RAX_GROUP = "RAX-GRPADM/groups";
     public static final String RAX_KSQA = "RAX-KSQA";
     public static final String RAX = "RAX-GRPADM";
+    public static final String RAX_AUTH = "RAX-AUTH";
+    public static final String IMPERSONATION_TOKENS_PATH = "impersonation-tokens";
 
     /**Query params**/
     public static final String BELONGS_TO = "belongsTo";

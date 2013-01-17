@@ -252,6 +252,22 @@
                             <goal>xjc</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>generate-impersonation-sources</id>
+                        <configuration>
+                            <staleFile>target/impersonation.staleFile</staleFile>
+                            <extension>true</extension>
+                            <schemaDirectory>
+                                ${basedir}/src/main/resources/META-INF/xsd
+                            </schemaDirectory>
+                            <clearOutputDir>false</clearOutputDir>
+                            <schemaFiles>impersonation.xsd</schemaFiles>
+                            <packageName>org.openstack.identity.client.impersonation</packageName>
+                        </configuration>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

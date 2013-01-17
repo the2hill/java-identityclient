@@ -31,6 +31,7 @@ public class IdentityClient extends IdentityManager {
     private GroupResourceManager groupResourceManager = new GroupResourceManagerImpl();
     private RolesResourceManager rolesResourceManager = new RolesResourceManagerImpl();
     private SecretQAResourceManager secretQAResourceManager = new SecretQAResourceManagerImpl();
+    private ImpersonationResourceManager impersonationResourceManager = new ImpersonationResourceManagerImpl();
 
     public IdentityClient(String authUrl, Client client) throws IdentityFault {
         super(authUrl, client);
@@ -1319,6 +1320,40 @@ public class IdentityClient extends IdentityManager {
      */
     public SecretQA updateSecretQA(String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
         return secretQAResourceManager.updateSecretQA(client, url, token, userId, question, answer);
+    }
+
+    /* ******************************************************************************************************************/
+    /*                                                IMPERSONATION                                                     */
+    /* ******************************************************************************************************************/
+
+
+    /**
+     * Impersonate user by userName
+     *
+     * @param token
+     * @param userName
+     * @param expireInSeconds
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public AuthenticateResponse impersonateUser(String token, String userName, int expireInSeconds) throws IdentityFault, URISyntaxException {
+        return impersonateUser(url, token, userName, expireInSeconds);
+    }
+
+    /**
+     * Impersonate user by userName with specif url
+     *
+     * @param url
+     * @param token
+     * @param userName
+     * @param expireInSeconds
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public AuthenticateResponse impersonateUser(String url, String token, String userName, int expireInSeconds) throws IdentityFault, URISyntaxException {
+        return impersonationResourceManager.impersonateUser(client, url, token, userName, expireInSeconds);
     }
 }
 

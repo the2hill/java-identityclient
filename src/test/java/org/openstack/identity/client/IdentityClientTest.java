@@ -588,7 +588,7 @@ public class IdentityClientTest {
         }
     }
 
-    //TODO:Update roles tests with better cases......
+    //TODO:Update roles tests with better cases......  would be helpful if auth didnt have broken xml to parse...
     @Test
     public void getRole() throws Exception {
         try {
@@ -683,6 +683,21 @@ public class IdentityClientTest {
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
             SecretQA secret = client.updateSecretQA(response.getToken().getId(), response.getUser().getId(), "imATeaPot", "shortAndStout");
             assertNotNull(secret);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void impersonateUser() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            AuthenticateResponse re = client.impersonateUser(response.getToken().getId(), IdentityUtil.getProperty("username"), 300);
+            //Only return token with expiration time of impersonation...
+            assertNotNull(re);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
