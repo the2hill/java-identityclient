@@ -52,7 +52,7 @@ public abstract class ResponseManagerImpl implements ResponseManager {
         return client.resource(uri).type(MediaType.APPLICATION_XML_TYPE)
                 .header(IdentityConstants.X_TOKEN_HEADER, token)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .post(ClientResponse.class, body);
+                .put(ClientResponse.class, body);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.openstack.identity.client;
 
+import com.sun.jersey.api.client.ClientResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openstack.identity.client.client.IdentityClient;
@@ -707,6 +708,23 @@ public class IdentityClientTest {
     }
 
     @Test
+    public void createDomain() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            ClientResponse re = client.createDomain(response.getToken().getId(), "30007032", "TestDomain", true, "This is just a test");
+            assertNotNull(re);
+            assertTrue(re.getHeaders().containsKey("Location"));
+            assertEquals("http://staging.identity.api.rackspacecloud.com/cloud/v2.0/RAX-AUTH/domains/30007032", re.getHeaders().containsKey("Location"));
+            System.out.print(re.getHeaders().getFirst("Location"));
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
     public void getDomain() throws Exception {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
@@ -714,6 +732,39 @@ public class IdentityClientTest {
             Domain re = client.getDomain(response.getToken().getId(), "1");
             assertNotNull(re);
             assertEquals("Default Domain", re.getDescription());
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void updateDomain() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            boolean re = client.updateDomain(response.getToken().getId(), "30007032", "new NAME", null, null);
+            assertTrue(re);
+            Domain dom = client.getDomain(response.getToken().getId(), "30007032");
+            assertEquals("new NAME", dom.getName());
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void deleteDomain() throws Exception {
+        //Currently 503 is thrown....
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            boolean re = client.deleteDomain(response.getToken().getId(), "30007032");
+            assertTrue(re);
+            Domain dom = client.getDomain(response.getToken().getId(), "30007032");
+            assertNull(dom);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());

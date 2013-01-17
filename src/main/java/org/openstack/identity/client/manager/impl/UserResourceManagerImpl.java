@@ -352,8 +352,7 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
             user.getOtherAttributes().put(new QName(IdentityConstants.RAX_KSADM_NS, IdentityConstants.PASSWORD), password);
         if (region != null)
             user.getOtherAttributes().put(new QName(IdentityConstants.RAX_KSADM_NS, IdentityConstants.DEFAULT_REGION), region);
-        System.out.println(ResourceUtil.marshallResource(factory.createUser(user),
-                JAXBContext.newInstance(User.class)).toString());
+
         return ResourceUtil.marshallResource(factory.createUser(user),
                 JAXBContext.newInstance(User.class)).toString();
     }
@@ -384,8 +383,6 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
         if (region != null)
             updatedUser.getOtherAttributes().put(new QName(IdentityConstants.RAX_AUTH_NS, IdentityConstants.DEFAULT_REGION), region);
 
-        System.out.println(ResourceUtil.marshallResource(factory.createUser(updatedUser),
-                JAXBContext.newInstance(User.class)).toString());
         return ResourceUtil.marshallResource(factory.createUser(updatedUser),
                 JAXBContext.newInstance(User.class)).toString();
     }
@@ -423,8 +420,6 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
         apiKeyCredential.setUsername(username);
         apiKeyCredential.setApiKey(apiKey);
 
-        System.out.println(ResourceUtil.marshallResource(factory.createApiKeyCredentials(apiKeyCredential),
-                JAXBContext.newInstance(ApiKeyCredentials.class)).toString());
         return ResourceUtil.marshallResource(factory.createApiKeyCredentials(apiKeyCredential),
                 JAXBContext.newInstance(ApiKeyCredentials.class)).toString();
     }

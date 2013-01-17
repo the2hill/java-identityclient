@@ -1,6 +1,7 @@
 package org.openstack.identity.client.client;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openstack.identity.client.domain.Domain;
@@ -1365,6 +1366,38 @@ public class IdentityClient extends IdentityManager {
     /* ******************************************************************************************************************/
 
     /**
+     * Create domain
+     *
+     * @param token
+     * @param domainId
+     * @param domainName
+     * @param enabled
+     * @param description
+     * @return ClientResponse: retrieve headers from .getHeaders()
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public ClientResponse createDomain(String token, String domainId, String domainName, boolean enabled, String description) throws IdentityFault, URISyntaxException {
+        return createDomain(url, token, domainId, domainName, enabled, description);
+    }
+
+    /**
+     * Create domain with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @param domainName
+     * @param enabled
+     * @param description
+     * @return ClientResponse retrieve headers from .getHeaders()
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public ClientResponse createDomain(String url, String token, String domainId, String domainName, boolean enabled, String description) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.createDomain(client, url, token, domainId, domainName, enabled, description);
+    }
+    /**
      * Retrieve domain by domainId
      *
      * @param token
@@ -1390,5 +1423,67 @@ public class IdentityClient extends IdentityManager {
     public Domain getDomain(String url, String token, String domainId) throws IdentityFault, URISyntaxException {
         return domainResourceManager.getDomain(client, url, token, domainId);
     }
+
+    /**
+     * Update domain by domainId
+     *
+     * @param token
+     * @param domainId
+     * @param domainName
+     * @param enabled: must be TRUE or FALSE
+     * @param description
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean updateDomain(String token, String domainId, String domainName, String enabled, String description) throws IdentityFault, URISyntaxException {
+        return updateDomain(url, token, domainId, domainName, enabled, description);
+    }
+
+    /**
+     * Update domain by domainId with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @param domainName
+     * @param enabled: must be TRUE or FALSE
+     * @param description
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean updateDomain(String url, String token, String domainId, String domainName, String enabled, String description) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.updateDomain(client, url, token, domainId, domainName, enabled, description);
+    }
+
+    /**
+     * Delete domain by domainId
+     *
+     * @param token
+     * @param domainId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean deleteDomain(String token, String domainId) throws IdentityFault, URISyntaxException {
+        return deleteDomain(url, token, domainId);
+    }
+
+    /**
+     * Delete domain by domainId with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean deleteDomain(String url, String token, String domainId) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.deleteDomain(client, url, token, domainId);
+    }
+
+
 }
 
