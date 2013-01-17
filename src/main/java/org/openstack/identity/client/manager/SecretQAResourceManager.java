@@ -10,5 +10,5 @@ public interface SecretQAResourceManager {
 
     public SecretQA listSecretQA(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException;
 
-    public SecretQA updateSecretQA(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException;
+    public SecretQA updateSecretQA(Client client, String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException;
 }

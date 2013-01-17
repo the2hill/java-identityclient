@@ -1280,12 +1280,35 @@ public class IdentityClient extends IdentityManager {
         return secretQAResourceManager.listSecretQA(client, url, token, userId);
     }
 
-    public SecretQA updateSecretQA(String token, String userId) throws IdentityFault, URISyntaxException {
-        return secretQAResourceManager.updateSecretQA(client, url, token, userId);
+    /**
+     * Update secret question and answer
+     *
+     * @param token
+     * @param userId
+     * @param question
+     * @param answer
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public SecretQA updateSecretQA(String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
+        return updateSecretQA(url, token, userId, question, answer);
     }
 
-    public SecretQA updateSecretQA(String url, String token, String userId) throws IdentityFault, URISyntaxException {
-        return secretQAResourceManager.updateSecretQA(client, url, token, userId);
+    /**
+     * Update secret question and answer with a specific url
+     *
+     * @param url
+     * @param token
+     * @param userId
+     * @param question
+     * @param answer
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public SecretQA updateSecretQA(String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
+        return secretQAResourceManager.updateSecretQA(client, url, token, userId, question, answer);
     }
 }
 
