@@ -7,8 +7,8 @@ import org.openstack.identity.client.common.constants.IdentityConstants;
 import org.openstack.identity.client.common.util.ResourceUtil;
 import org.openstack.identity.client.common.wrapper.IdentityResponseWrapper;
 import org.openstack.identity.client.fault.IdentityFault;
-import org.openstack.identity.client.group.ObjectFactory;
 import org.openstack.identity.client.manager.SecretQAResourceManager;
+import org.openstack.identity.client.secretqa.ObjectFactory;
 import org.openstack.identity.client.secretqa.SecretQA;
 
 import javax.xml.bind.JAXBContext;
@@ -39,18 +39,27 @@ public class SecretQAResourceManagerImpl extends ResponseManagerImpl implements 
     public SecretQA updateSecretQA(Client client, String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = post(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/"
-                    + IdentityConstants.RAX_KSQA + "/" + IdentityConstants.SECRET_QA), token);
+            response = put(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/"
+                    + IdentityConstants.RAX_KSQA + "/" + IdentityConstants.SECRET_QA), token, buildSecretQARequestObject(question, answer));
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        } catch (JAXBException e) {
+            throw new IdentityFault(e.getMessage(), e.getLinkedException().getLocalizedMessage(), Integer.valueOf(e.getErrorCode()));
         }
-        return new SecretQA();
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+
+        return response.getEntity(SecretQA.class);
     }
 
-    private String buildSecretQA(String question, String answer) throws JAXBException {
+    private String buildSecretQARequestObject(String question, String answer) throws JAXBException {
         ObjectFactory factory = new ObjectFactory();
-        SecretQA secret = new SecretQA();
-        secret.setAnswer(answer);
-        secret.setQuestion(question);
-        //return ResourceUtil.marshallResource(factory.create(secret),
-        //        JAXBContext.newInstance(SecretQA.class)).toString();
+        SecretQA qa = factory.createSecretQA();
+        qa.setQuestion(question);
+        qa.setAnswer(answer);
+        return ResourceUtil.marshallResource(factory.createAnswer(qa),
+                JAXBContext.newInstance(SecretQA.class)).toString();
     }
 }

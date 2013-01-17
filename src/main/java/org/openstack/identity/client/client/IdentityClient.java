@@ -44,7 +44,9 @@ public class IdentityClient extends IdentityManager {
         super();
     }
 
-    //Authentication requests:
+    /* ******************************************************************************************************************/
+    /*                                                 AUTHENTICATION                                                   */
+    /* ******************************************************************************************************************/
 
     /**
      * Authenticate user with username and password
@@ -212,7 +214,9 @@ public class IdentityClient extends IdentityManager {
         return authenticationResourceManager.authenticateUsernameApiKey(client, url, tenantName, tokenId);
     }
 
-    //Token requests:
+    /* ******************************************************************************************************************/
+    /*                                                      TOKENS                                                      */
+    /* ******************************************************************************************************************/
 
     /**
      * Validate token for tenantName
@@ -296,7 +300,9 @@ public class IdentityClient extends IdentityManager {
         return tokenResourceManager.retrieveEndpointsForToken(client, url, adminToken, token);
     }
 
-    //Tenant requests:
+    /* ******************************************************************************************************************/
+    /*                                                      TENANTS                                                     */
+    /* ******************************************************************************************************************/
 
     /**
      * Retrieve tenants based off of the users tokenId
@@ -406,7 +412,9 @@ public class IdentityClient extends IdentityManager {
         return tenantResourceManager.retrieveRolesByTenantId(client, url, token, tenantName, userId);
     }
 
-    //User requests:
+    /* ******************************************************************************************************************/
+    /*                                                      USERS                                                       */
+    /* ******************************************************************************************************************/
 
     /**
      * List users by token
@@ -726,7 +734,9 @@ public class IdentityClient extends IdentityManager {
         return userResourceManager.deleteUser(client, url, token, userId);
     }
 
-    //Groups requests:
+    /* ******************************************************************************************************************/
+    /*                                                      GROUPS                                                      */
+    /* ******************************************************************************************************************/
 
     /**
      * List available groups
@@ -1281,7 +1291,7 @@ public class IdentityClient extends IdentityManager {
     }
 
     /**
-     * Update secret question and answer
+     * Update secret question and answer for userId
      *
      * @param token
      * @param userId
@@ -1296,7 +1306,7 @@ public class IdentityClient extends IdentityManager {
     }
 
     /**
-     * Update secret question and answer with a specific url
+     * Update secret question and answer for userId with specific url
      *
      * @param url
      * @param token

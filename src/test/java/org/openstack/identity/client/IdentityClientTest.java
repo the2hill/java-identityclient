@@ -681,9 +681,8 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            SecretQA secret = client.listSecretQA(response.getToken().getId(), response.getUser().getId());
-            SecretQA newSecret = client.updateSecretQA(response.getToken().getId(), response.getUser().getId(), "What is your favorite teddy bear?", "Snookums");
-            assertFalse(secret.equals(newSecret));
+            SecretQA secret = client.updateSecretQA(response.getToken().getId(), response.getUser().getId(), "imATeaPot", "shortAndStout");
+            assertNotNull(secret);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
