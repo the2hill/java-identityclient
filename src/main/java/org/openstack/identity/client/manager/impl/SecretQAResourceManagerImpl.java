@@ -59,7 +59,7 @@ public class SecretQAResourceManagerImpl extends ResponseManagerImpl implements 
         SecretQA qa = factory.createSecretQA();
         qa.setQuestion(question);
         qa.setAnswer(answer);
-        return ResourceUtil.marshallResource(factory.createAnswer(qa),
+        return ResourceUtil.marshallResource(factory.createSecretQA(qa),
                 JAXBContext.newInstance(SecretQA.class)).toString();
     }
 }
