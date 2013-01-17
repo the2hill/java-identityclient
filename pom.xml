@@ -268,6 +268,38 @@
                             <goal>xjc</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>generate-domain-sources</id>
+                        <configuration>
+                            <staleFile>target/domain.staleFile</staleFile>
+                            <extension>true</extension>
+                            <schemaDirectory>
+                                ${basedir}/src/main/resources/META-INF/xsd
+                            </schemaDirectory>
+                            <clearOutputDir>false</clearOutputDir>
+                            <schemaFiles>domain.xsd</schemaFiles>
+                            <packageName>org.openstack.identity.client.domain</packageName>
+                        </configuration>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-desc-sources</id>
+                        <configuration>
+                            <staleFile>target/desc.staleFile</staleFile>
+                            <extension>true</extension>
+                            <schemaDirectory>
+                                ${basedir}/src/main/resources/META-INF/xsd
+                            </schemaDirectory>
+                            <clearOutputDir>false</clearOutputDir>
+                            <schemaFiles>description.xsd</schemaFiles>
+                            <packageName>org.openstack.identity.client.domain.description</packageName>
+                        </configuration>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

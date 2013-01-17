@@ -3,6 +3,7 @@ package org.openstack.identity.client.client;
 import com.sun.jersey.api.client.Client;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openstack.identity.client.domain.Domain;
 import org.openstack.identity.client.endpoints.EndpointList;
 import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.group.Group;
@@ -32,6 +33,7 @@ public class IdentityClient extends IdentityManager {
     private RolesResourceManager rolesResourceManager = new RolesResourceManagerImpl();
     private SecretQAResourceManager secretQAResourceManager = new SecretQAResourceManagerImpl();
     private ImpersonationResourceManager impersonationResourceManager = new ImpersonationResourceManagerImpl();
+    private DomainResourceManager domainResourceManager = new DomainResourceManagerImpl();
 
     public IdentityClient(String authUrl, Client client) throws IdentityFault {
         super(authUrl, client);
@@ -873,7 +875,6 @@ public class IdentityClient extends IdentityManager {
     /**
      * Add group
      *
-     *
      * @param token
      * @param name
      * @param description
@@ -887,7 +888,6 @@ public class IdentityClient extends IdentityManager {
 
     /**
      * Add group with specific url
-     *
      *
      * @param url
      * @param token
@@ -962,12 +962,11 @@ public class IdentityClient extends IdentityManager {
     /**
      * Delete group by groupId
      *
-     *
      * @param token
      * @param groupId
+     * @return
      * @throws IdentityFault
      * @throws URISyntaxException
-     * @return
      */
     public boolean deleteGroup(String token, String groupId) throws IdentityFault, URISyntaxException {
         return deleteGroup(url, token, groupId);
@@ -979,12 +978,12 @@ public class IdentityClient extends IdentityManager {
      * @param url
      * @param token
      * @param groupId
+     * @return
      * @throws IdentityFault
      * @throws URISyntaxException
-     * @return
      */
     public boolean deleteGroup(String url, String token, String groupId) throws IdentityFault, URISyntaxException {
-       return groupResourceManager.deleteGroup(client, url, token, groupId);
+        return groupResourceManager.deleteGroup(client, url, token, groupId);
     }
 
     /**
@@ -1057,7 +1056,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-      public RoleList listRoles(String token) throws IdentityFault, URISyntaxException {
+    public RoleList listRoles(String token) throws IdentityFault, URISyntaxException {
         return listRoles(url, token, null, null, null);
     }
 
@@ -1354,6 +1353,42 @@ public class IdentityClient extends IdentityManager {
      */
     public AuthenticateResponse impersonateUser(String url, String token, String userName, int expireInSeconds) throws IdentityFault, URISyntaxException {
         return impersonationResourceManager.impersonateUser(client, url, token, userName, expireInSeconds);
+    }
+
+    /* ******************************************************************************************************************/
+    /*                                                RATE LIMITS                                                       */
+    /* ******************************************************************************************************************/
+    //TODO: dont think this is ready. Docs have misleading information ...
+
+    /* ******************************************************************************************************************/
+    /*                                                DOMAINS                                                           */
+    /* ******************************************************************************************************************/
+
+    /**
+     * Retrieve domain by domainId
+     *
+     * @param token
+     * @param domainId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Domain getDomain(String token, String domainId) throws IdentityFault, URISyntaxException {
+        return getDomain(url, token, domainId);
+    }
+
+    /**
+     * Retrieve domain by domainId with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Domain getDomain(String url, String token, String domainId) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.getDomain(client, url, token, domainId);
     }
 }
 

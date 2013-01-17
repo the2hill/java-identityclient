@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openstack.identity.client.client.IdentityClient;
 import org.openstack.identity.client.common.util.IdentityUtil;
+import org.openstack.identity.client.domain.Domain;
 import org.openstack.identity.client.endpoints.EndpointList;
 import org.openstack.identity.client.entity.TestUser;
 import org.openstack.identity.client.fault.IdentityFault;
@@ -698,6 +699,21 @@ public class IdentityClientTest {
             AuthenticateResponse re = client.impersonateUser(response.getToken().getId(), IdentityUtil.getProperty("username"), 300);
             //Only return token with expiration time of impersonation...
             assertNotNull(re);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void getDomain() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            Domain re = client.getDomain(response.getToken().getId(), "1");
+            assertNotNull(re);
+            assertEquals("Default Domain", re.getDescription());
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());

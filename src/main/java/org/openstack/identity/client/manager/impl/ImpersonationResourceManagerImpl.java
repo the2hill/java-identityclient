@@ -23,7 +23,6 @@ public class ImpersonationResourceManagerImpl extends ResponseManagerImpl implem
     public AuthenticateResponse impersonateUser(Client client, String url, String token, String userName, int epireInSeconds) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            URI test = new URI(url + IdentityConstants.RAX_AUTH + "/" + IdentityConstants.IMPERSONATION_TOKENS_PATH);
             response = post(client, new URI(url + IdentityConstants.RAX_AUTH + "/" + IdentityConstants.IMPERSONATION_TOKENS_PATH), token, buildImpersonationRequestObject(userName, epireInSeconds));
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
