@@ -772,6 +772,76 @@ public class IdentityClientTest {
         }
     }
 
+    @Test
+    public void listEndpointsForDomain() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            EndpointList re = client.getEndpointsForDomain(response.getToken().getId(), "30007032");
+            assertNotNull(re);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void listUsersForDomain() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            UserList re = client.getUsersForDomain(response.getToken().getId(), "30007032", "true");
+            assertNotNull(re);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void addUserToDomain() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            boolean re = client.addUserToDomain(response.getToken().getId(), "30007032", IdentityUtil.getProperty("user_id"));
+            assertTrue(re);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void listTenantsForDomain() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            Tenants re = client.getTenantsFromDomain(response.getToken().getId(), "30007032", "true");
+            assertNotNull(re);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void addTenantToDomain() throws Exception {
+        try {
+            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            boolean re = client.addTenantToDomain(response.getToken().getId(), "30007032", IdentityUtil.getProperty("tenant_id"));
+            assertTrue(re);
+        } catch (IdentityFault ex) {
+            System.out.println("FAILURE gathering authenticated user info.");
+            System.out.print(ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
     private Tenants retrieveTenants(String token) throws IdentityFault, URISyntaxException {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         return client.retrieveTenants(testUser.getTokenId());

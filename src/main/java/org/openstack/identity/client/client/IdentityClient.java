@@ -1484,6 +1484,147 @@ public class IdentityClient extends IdentityManager {
         return domainResourceManager.deleteDomain(client, url, token, domainId);
     }
 
+    /**
+     * List endpoints for domain by domainId
+     *
+     * @param token
+     * @param domainId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public EndpointList getEndpointsForDomain(String token, String domainId) throws IdentityFault, URISyntaxException {
+        return getEndpointsForDomain(url, token, domainId);
+    }
 
+    /**
+     * List endpoints for domain by domainId with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public EndpointList getEndpointsForDomain(String url, String token, String domainId) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.getEndpointsForDomain(client, url, token, domainId);
+    }
+
+    /**
+     * List users associated with domainId
+     *
+     * @param token
+     * @param domainId
+     * @param enabled: optional
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public UserList getUsersForDomain(String token, String domainId, String enabled) throws IdentityFault, URISyntaxException {
+        return getUsersForDomain(url, token, domainId, enabled);
+    }
+
+    /**
+     * List users associated with domainId with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @param enabled
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public UserList getUsersForDomain(String url, String token, String domainId, String enabled) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.getUsersFromDomain(client, url, token, domainId, enabled);
+    }
+
+    /**
+     * Add user to domain by domainId and userId
+     *
+     * @param token
+     * @param domainId
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean addUserToDomain(String token, String domainId, String userId) throws IdentityFault, URISyntaxException {
+        return addUserToDomain(url, token, domainId, userId);
+    }
+
+    /**
+     * Add user to domain by domainId and userId with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @param userId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean addUserToDomain(String url, String token, String domainId, String userId) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.addUserToDomain(client, url, token, domainId, userId);
+    }
+
+    /**
+     * List tenants associated with domainId
+     *
+     * @param token
+     * @param domainId
+     * @param enabled: optional
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Tenants getTenantsFromDomain(String token, String domainId, String enabled) throws IdentityFault, URISyntaxException {
+        return getTenantsFromDomain(url, token, domainId, enabled);
+    }
+
+    /**
+     * List tenants associated with domainId with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @param enabled
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Tenants getTenantsFromDomain(String url, String token, String domainId, String enabled) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.getTenantsFromDomain(client, url, token, domainId, enabled);
+    }
+
+    /**
+     * Add tenant to domain by domainId and tenantId
+     *
+     * @param token
+     * @param domainId
+     * @param tenantId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean addTenantToDomain(String token, String domainId, String tenantId) throws IdentityFault, URISyntaxException {
+        return addTenantToDomain(url, token, domainId, tenantId);
+    }
+
+    /**
+     * Add tenant to domain by domainId and tenantId with specific url
+     *
+     * @param url
+     * @param token
+     * @param domainId
+     * @param tenantId
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public boolean addTenantToDomain(String url, String token, String domainId, String tenantId) throws IdentityFault, URISyntaxException {
+        return domainResourceManager.addTenantToDomain(client, url, token, domainId, tenantId);
+    }
 }
 
