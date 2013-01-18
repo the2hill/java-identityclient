@@ -1,14 +1,13 @@
 package org.openstack.identity.client.common.wrapper;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openstack.identity.client.common.constants.IdentityConstants;
-import org.openstack.identity.client.common.util.ResourceUtil;
 import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.faults.*;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 public class IdentityResponseWrapper {
@@ -74,11 +73,8 @@ public class IdentityResponseWrapper {
     private static IdentityFault processIdentityFault(org.openstack.identity.client.faults.IdentityFault e) throws JAXBException {
         org.openstack.identity.client.faults.IdentityFault ie = null;
         if (e.getMessage() == null && e.getDetails() == null) {
-            ie = (org.openstack.identity.client.faults.IdentityFault)
-                    ResourceUtil.unmarshallResource(e.getAny().get(0),
-                            JAXBContext.newInstance(org.openstack.identity.client.faults.IdentityFault.class))
-                            .getValue();
-            return new IdentityFault(ie.getMessage(), ie.getDetails(), ie.getCode());
+            ElementNSImpl dom = (ElementNSImpl) e.getAny().get(1);
+            return new IdentityFault(dom.getFirstChild().getTextContent(), dom.getFirstChild().getTextContent(), e.getCode());
 
         }
         return new IdentityFault(e.getMessage(), e.getDetails(), e.getCode());
