@@ -37,15 +37,27 @@ public class IdentityClient extends IdentityManager {
     private DomainResourceManager domainResourceManager = new DomainResourceManagerImpl();
 
     public IdentityClient(String authUrl, Client client) throws IdentityFault {
-        super(authUrl, client);
+        super(authUrl, client, false);
+    }
+
+    public IdentityClient(String authUrl, Client client, boolean isDebugging) throws IdentityFault {
+        super(authUrl, client, isDebugging);
     }
 
     public IdentityClient(String authUrl) throws IdentityFault {
         super(authUrl);
     }
 
+    public IdentityClient(String authUrl, boolean isDebugging) throws IdentityFault {
+        super(authUrl, isDebugging);
+    }
+
     public IdentityClient() throws IdentityFault {
         super();
+    }
+
+    public IdentityClient(boolean isDebugging) throws IdentityFault {
+        super(isDebugging);
     }
 
     /* ******************************************************************************************************************/
@@ -1397,6 +1409,7 @@ public class IdentityClient extends IdentityManager {
     public ClientResponse createDomain(String url, String token, String domainId, String domainName, boolean enabled, String description) throws IdentityFault, URISyntaxException {
         return domainResourceManager.createDomain(client, url, token, domainId, domainName, enabled, description);
     }
+
     /**
      * Retrieve domain by domainId
      *
@@ -1430,7 +1443,7 @@ public class IdentityClient extends IdentityManager {
      * @param token
      * @param domainId
      * @param domainName
-     * @param enabled: must be TRUE or FALSE
+     * @param enabled:    must be TRUE or FALSE
      * @param description
      * @return
      * @throws IdentityFault
@@ -1447,7 +1460,7 @@ public class IdentityClient extends IdentityManager {
      * @param token
      * @param domainId
      * @param domainName
-     * @param enabled: must be TRUE or FALSE
+     * @param enabled:    must be TRUE or FALSE
      * @param description
      * @return
      * @throws IdentityFault
