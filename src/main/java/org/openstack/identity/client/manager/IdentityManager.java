@@ -33,7 +33,7 @@ public abstract class IdentityManager {
         if (authUrl == null) {
             this.url = IdentityUtil.getProperty(auth_uri);
         }
-        if (client != null) {
+        if (client == null) {
             this.client = configureClient(isDebugging);
         } else {
             this.client = client;
