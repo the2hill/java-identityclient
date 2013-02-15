@@ -34,7 +34,6 @@ public abstract class ResponseManagerImpl implements ResponseManager {
 
     @Override
     public ClientResponse post(Client client, URI uri, String body) {
-        System.out.print(body);
         return client.resource(uri).type(MediaType.APPLICATION_XML_TYPE)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .post(ClientResponse.class, body);

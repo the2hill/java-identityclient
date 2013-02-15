@@ -225,7 +225,7 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
         return ResourceUtil.marshallResource(factory.createAuth(authenticationRequest),
                 JAXBContext.newInstance(AuthenticationRequest.class)).toString();
         } else {
-            throw new IdentityFault("Request object must be intialised first. ", "Internal ERROR", 500);
+            throw new IdentityFault("Request object must be initialized first. ", "Internal ERROR", 500);
         }
     }
 
