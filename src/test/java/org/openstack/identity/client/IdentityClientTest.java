@@ -3,6 +3,7 @@ package org.openstack.identity.client;
 import com.sun.jersey.api.client.ClientResponse;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openstack.identity.client.access.Access;
 import org.openstack.identity.client.client.IdentityClient;
 import org.openstack.identity.client.common.util.IdentityUtil;
 import org.openstack.identity.client.domain.Domain;
@@ -697,9 +698,10 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            AuthenticateResponse re = client.impersonateUser(response.getToken().getId(), IdentityUtil.getProperty("username"), 300);
+            Access re = client.impersonateUser(response.getToken().getId(), IdentityUtil.getProperty("username"), 300);
             //Only return token with expiration time of impersonation...
             assertNotNull(re);
+            assertNotNull(re.getToken().getId());
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());

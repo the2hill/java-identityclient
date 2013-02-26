@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openstack.identity.client.access.Access;
 import org.openstack.identity.client.domain.Domain;
 import org.openstack.identity.client.endpoints.EndpointList;
 import org.openstack.identity.client.fault.IdentityFault;
@@ -1349,7 +1350,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public AuthenticateResponse impersonateUser(String token, String userName, int expireInSeconds) throws IdentityFault, URISyntaxException {
+    public Access impersonateUser(String token, String userName, int expireInSeconds) throws IdentityFault, URISyntaxException, JAXBException {
         return impersonateUser(url, token, userName, expireInSeconds);
     }
 
@@ -1364,7 +1365,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public AuthenticateResponse impersonateUser(String url, String token, String userName, int expireInSeconds) throws IdentityFault, URISyntaxException {
+    public Access impersonateUser(String url, String token, String userName, int expireInSeconds) throws IdentityFault, URISyntaxException, JAXBException {
         return impersonationResourceManager.impersonateUser(client, url, token, userName, expireInSeconds);
     }
 

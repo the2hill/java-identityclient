@@ -23,7 +23,7 @@
         schemaLocation="atom/atom.xsd" />
 
     <!-- Elements -->
-    <element name="access" type="identity:AuthenticateResponse"/>
+    <element name="authenticateResponse" type="identity:AuthenticateResponse"/>
 
     <!-- Complex Types -->
     <complexType name="Token">

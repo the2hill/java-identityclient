@@ -3,6 +3,7 @@ package org.openstack.identity.client.manager.impl;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import org.openstack.identity.client.access.Access;
 import org.openstack.identity.client.common.constants.IdentityConstants;
 import org.openstack.identity.client.common.util.ResourceUtil;
 import org.openstack.identity.client.common.wrapper.IdentityResponseWrapper;
@@ -10,7 +11,6 @@ import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.impersonation.Impersonation;
 import org.openstack.identity.client.impersonation.ObjectFactory;
 import org.openstack.identity.client.manager.ImpersonationResourceManager;
-import org.openstack.identity.client.token.AuthenticateResponse;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 public class ImpersonationResourceManagerImpl extends ResponseManagerImpl implements ImpersonationResourceManager {
 
     @Override
-    public AuthenticateResponse impersonateUser(Client client, String url, String token, String userName, int epireInSeconds) throws IdentityFault, URISyntaxException {
+    public Access impersonateUser(Client client, String url, String token, String userName, int epireInSeconds) throws IdentityFault, URISyntaxException, JAXBException {
         ClientResponse response = null;
         try {
             response = post(client, new URI(url + IdentityConstants.RAX_AUTH + "/" + IdentityConstants.IMPERSONATION_TOKENS_PATH), token, buildImpersonationRequestObject(userName, epireInSeconds));
@@ -34,7 +34,7 @@ public class ImpersonationResourceManagerImpl extends ResponseManagerImpl implem
             handleBadResponse(response);
         }
 
-        return response.getEntity(AuthenticateResponse.class);
+        return response.getEntity(Access.class);
     }
 
 

@@ -93,6 +93,22 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>generate-access-sources</id>
+                        <configuration>
+                            <staleFile>target/acc.staleFile</staleFile>
+                            <extension>true</extension>
+                            <schemaDirectory>
+                                ${basedir}/src/main/resources/META-INF/xsd
+                            </schemaDirectory>
+                            <clearOutputDir>false</clearOutputDir>
+                            <schemaFiles>access.xsd</schemaFiles>
+                            <packageName>org.openstack.identity.client.access</packageName>
+                        </configuration>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>generate-auth-fault-sources</id>
                         <configuration>
                             <staleFile>target/f.staleFile</staleFile>
