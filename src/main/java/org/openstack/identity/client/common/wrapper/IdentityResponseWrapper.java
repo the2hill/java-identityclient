@@ -27,12 +27,12 @@ public class IdentityResponseWrapper {
                     return new IdentityFault(e.getMessage(), e.getDetails(), e.getCode());
                 }
                 if (response.getStatus() == IdentityConstants.FORBIDDEN) {
-                    ForbiddenFault e = response.getEntity(ForbiddenFault.class);
-                    if (e != null) {
-                        return processIdentityFault(e);
-                    } else {
-                        UserDisabledFault udf = response.getEntity(UserDisabledFault.class);
+                    UserDisabledFault udf = response.getEntity(UserDisabledFault.class);
+                    if (udf != null) {
                         return processIdentityFault(udf);
+                    } else {
+                        ForbiddenFault e = response.getEntity(ForbiddenFault.class);
+                        return processIdentityFault(e);
                     }
                 }
                 if (response.getStatus() == IdentityConstants.NOT_FOUND) {

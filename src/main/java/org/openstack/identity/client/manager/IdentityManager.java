@@ -13,7 +13,7 @@ public abstract class IdentityManager {
     protected String url;
     protected Client client;
     protected boolean isDebugging;
-    private int TIMEOUT = 300;
+    public int timeout = 3000;
 
     /**
      * @param authUrl the url to the identity auth service
@@ -24,12 +24,44 @@ public abstract class IdentityManager {
     }
 
     /**
+     * Allows configuration of the timeout value for connection and read
+     * @param authUrl
+     * @param timeout
+     */
+    public IdentityManager(String authUrl, int timeout) {
+        this.url = authUrl;
+        this.client = new Client();
+        this.timeout = timeout;
+    }
+
+    /**
+     * Allows configuration of the timeout value for connection and read
+     * @param authUrl
+     * @param timeout
+     * @param isDebugging
+     */
+    public IdentityManager(String authUrl, int timeout, boolean isDebugging) {
+        this(authUrl, new Client(), timeout, isDebugging);
+    }
+
+    /**
      * @param authUrl     the url to the identity auth service
      * @param client      the Jersey client used to talk to identity
      * @param isDebugging allows debugging option
      */
     public IdentityManager(String authUrl, Client client, boolean isDebugging) {
+       this(authUrl, client, 3000, isDebugging);
+    }
+
+    /**
+     * @param authUrl     the url to the identity auth service
+     * @param client      the Jersey client used to talk to identity
+     * @param timeout
+     * @param isDebugging allows debugging option
+     */
+    public IdentityManager(String authUrl, Client client, int timeout, boolean isDebugging) {
         this.url = authUrl;
+        this.timeout = timeout;
         if (authUrl == null) {
             this.url = IdentityUtil.getProperty(auth_uri);
         }
@@ -80,11 +112,12 @@ public abstract class IdentityManager {
         this.isDebugging = isDebugging;
     }
 
+
     private Client configureClient(boolean isDebugging) {
         DefaultClientConfig cc = new DefaultClientConfig();
         cc.getProperties().put(ClientConfig.PROPERTY_FOLLOW_REDIRECTS, false);
-        cc.getProperties().put(ClientConfig.PROPERTY_CONNECT_TIMEOUT, TIMEOUT);
-        cc.getProperties().put(ClientConfig.PROPERTY_READ_TIMEOUT, TIMEOUT);
+        cc.getProperties().put(ClientConfig.PROPERTY_CONNECT_TIMEOUT, timeout);
+        cc.getProperties().put(ClientConfig.PROPERTY_READ_TIMEOUT, timeout);
         Client client = Client.create(cc);
         if (isDebugging) {
             client.addFilter(new LoggingFilter());

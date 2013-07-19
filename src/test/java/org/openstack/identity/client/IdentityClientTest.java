@@ -32,6 +32,15 @@ public class IdentityClientTest {
     //Order matters(Need to get a token based off of other credentials, those that need token for authentication may need to run another first)...
 
     @Test
+    public void validateTimeoutSet() throws Exception {
+        IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+        Assert.assertEquals(3000, client.timeout);
+
+        IdentityClient client2 = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"), 100);
+        Assert.assertEquals(100, client2.timeout);
+    }
+
+    @Test
     public void validateCloudUsernamePassword() throws Exception {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         try {
@@ -276,6 +285,11 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            User bob;
+            bob = client.listUserByName(response.getToken().getId(), "bobBuilder");
+            if (bob.getId() != null) {
+                client.deleteUser(response.getToken().getId(), bob.getId());
+            }
             User user = client.addUser(response.getToken().getId(), "bobBuilder", "password", true, "the@mail.com", "DFW");
             assertNotNull(user);
         } catch (IdentityFault ex) {

@@ -49,6 +49,14 @@ public class IdentityClient extends IdentityManager {
         super(authUrl);
     }
 
+    public IdentityClient(String authUrl, int timeout) throws IdentityFault {
+        super(authUrl, timeout);
+    }
+
+    public IdentityClient(String authUrl, int timeout, boolean isDebugging) throws IdentityFault {
+        super(authUrl, timeout, isDebugging);
+    }
+
     public IdentityClient(String authUrl, boolean isDebugging) throws IdentityFault {
         super(authUrl, isDebugging);
     }
