@@ -148,7 +148,7 @@ public class IdentityClientTest {
             assertNotNull(testUser.getTokenId());
             Tenants response = retrieveTenants(testUser.getTokenId());
             assertNotNull(response);
-            assertEquals(IdentityUtil.getProperty("tenant_id"), response.getTenant().get(0).getName());
+            assertEquals(IdentityUtil.getProperty("tenant_id"), response.getTenant().get(1).getName());
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
