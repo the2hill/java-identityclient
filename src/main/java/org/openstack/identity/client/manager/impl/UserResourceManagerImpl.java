@@ -379,7 +379,7 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
         }
 
         if (email != null) updatedUser.setEmail(email);
-        if (user.getEnabled() != enabled) updatedUser.setEnabled(enabled);
+        if (user.isEnabled() != enabled) updatedUser.setEnabled(enabled);
         if (region != null)
             updatedUser.getOtherAttributes().put(new QName(IdentityConstants.RAX_AUTH_NS, IdentityConstants.DEFAULT_REGION), region);
 
