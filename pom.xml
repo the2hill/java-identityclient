@@ -6,7 +6,7 @@
 
     <groupId>org.openstack.client.identity</groupId>
     <artifactId>java-identityclient</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>commons-logging</groupId>
