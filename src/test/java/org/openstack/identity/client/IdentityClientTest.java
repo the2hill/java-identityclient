@@ -24,11 +24,15 @@ import org.openstack.identity.client.user.User;
 import org.openstack.identity.client.user.UserList;
 
 import java.net.URISyntaxException;
+import java.util.Random;
 
 import static junit.framework.Assert.*;
 
 public class IdentityClientTest {
     private static TestUser testUser;
+    private static String kcsBuilder = "kcsBuilder" + Math.random() + Math.random(); // :/
+    private static String kcsBuilderGroup = "kcsBuilderGroup" + Math.random() + Math.random(); // :/
+    private static String kcsBuilderId;
     //Order matters(Need to get a token based off of other credentials, those that need token for authentication may need to run another first)...
 
     @Test
@@ -175,7 +179,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            Tenant tenant = client.retireveTenantById(response.getToken().getId(), IdentityUtil.getProperty("tenant_id"));
+            Tenant tenant = client.retrieveTenantById(response.getToken().getId(), IdentityUtil.getProperty("tenant_id"));
             assertNotNull(tenant);
             assertEquals(IdentityUtil.getProperty("tenant_id"), tenant.getId());
         } catch (IdentityFault ex) {
@@ -190,7 +194,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            Tenant tenant = client.retireveTenantByname(response.getToken().getId(), IdentityUtil.getProperty("tenant_name"));
+            Tenant tenant = client.retrieveTenantByname(response.getToken().getId(), IdentityUtil.getProperty("tenant_name"));
             assertNotNull(tenant);
             assertEquals(IdentityUtil.getProperty("tenant_name"), tenant.getName());
         } catch (IdentityFault ex) {
@@ -206,7 +210,7 @@ public class IdentityClientTest {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
             User user = client.listUserByName(response.getToken().getId(), IdentityUtil.getProperty("username"));
-            RoleList roles = client.retireveRolesByTenantId(response.getToken().getId(), IdentityUtil.getProperty("tenant_id"), user.getId());
+            RoleList roles = client.retrieveRolesByTenantId(response.getToken().getId(), IdentityUtil.getProperty("tenant_id"), user.getId());
             assertNotNull(roles);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
@@ -284,18 +288,24 @@ public class IdentityClientTest {
     public void addUser() throws Exception {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
-            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("username"), IdentityUtil.getProperty("password"));
             User bob;
-            bob = client.listUserByName(response.getToken().getId(), "bobBuilder");
-            if (bob.getId() != null) {
-                client.deleteUser(response.getToken().getId(), bob.getId());
+            try {
+                bob = client.listUserByName(response.getToken().getId(), kcsBuilder);
+                if (bob.getId() != null) {
+                    client.deleteUser(response.getToken().getId(), bob.getId());
+                }
+            } catch (IdentityFault ix) {
+                //ignore...
             }
-            User user = client.addUser(response.getToken().getId(), "bobBuilder", "password", true, "the@mail.com", "DFW");
+
+            User user = client.addUser(response.getToken().getId(), kcsBuilder, "Password1234", true, "the@mail.com", "DFW");
             assertNotNull(user);
-        } catch (IdentityFault ex) {
+            kcsBuilderId = user.getId();
+        } catch (Exception ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
-            Assert.fail(ex.getDetails());
+            Assert.fail(ex.getMessage());
         }
     }
 
@@ -304,9 +314,9 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            User updatedUserB = client.listUserByName(response.getToken().getId(), "bobBuilder");
+            User updatedUserB = client.listUserByName(response.getToken().getId(), kcsBuilder);
             assertNotNull(updatedUserB);
-            assertEquals("bobBuilder", updatedUserB.getUsername());
+            assertEquals(kcsBuilder, updatedUserB.getUsername());
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
@@ -319,9 +329,9 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            User updatedUserB = client.listUserById(response.getToken().getId(), IdentityUtil.getProperty("user_id"));
+            User updatedUserB = client.listUserById(response.getToken().getId(), kcsBuilderId);
             assertNotNull(updatedUserB);
-            assertEquals(IdentityUtil.getProperty("username"), updatedUserB.getUsername());
+            assertEquals(kcsBuilder, updatedUserB.getUsername());
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
@@ -333,9 +343,10 @@ public class IdentityClientTest {
     public void getUsers() throws Exception {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
-            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("username"), IdentityUtil.getProperty("password"));
             UserList updatedUserB = client.listUsers(response.getToken().getId());
             assertNotNull(updatedUserB);
+//            assertTrue(updatedUserB.getUser().contains(kcsBuilder));
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
@@ -348,9 +359,9 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
-            User user = client.updateUser(response.getToken().getId(), userb.getId(), "bobBuilder", true, "cheese@mail.com", "DFW");
-            User updatedUserB = client.listUserByName(response.getToken().getId(), "bobBuilder");
+            User userb = client.listUserByName(response.getToken().getId(), kcsBuilder);
+            User user = client.updateUser(response.getToken().getId(), userb.getId(), kcsBuilder, true, "cheese@mail.com", "DFW");
+            User updatedUserB = client.listUserByName(response.getToken().getId(), kcsBuilder);
             assertNotNull(user);
             assertEquals("cheese@mail.com", updatedUserB.getEmail());
         } catch (IdentityFault ex) {
@@ -365,9 +376,9 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
+            User userb = client.listUserByName(response.getToken().getId(), kcsBuilder);
             User user = client.updateUser(response.getToken().getId(), userb.getId(), null, true, "bob@mail.com", null);
-            User updatedUserB = client.listUserByName(response.getToken().getId(), "bobBuilder");
+            User updatedUserB = client.listUserByName(response.getToken().getId(), kcsBuilder);
             assertNotNull(user);
             assertEquals("bob@mail.com", updatedUserB.getEmail());
         } catch (IdentityFault ex) {
@@ -382,8 +393,8 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
-            User user = client.updateUserPassword(response.getToken().getId(), userb.getId(), "bobBuilder1");
+            User userb = client.listUserByName(response.getToken().getId(), kcsBuilder);
+            User user = client.updateUserPassword(response.getToken().getId(), userb.getId(), "kcsBuilder1");
             assertNotNull(user);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
@@ -397,7 +408,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
+            User userb = client.listUserByName(response.getToken().getId(), kcsBuilder);
             AuthenticateResponse user = client.updateUserCredentials(response.getToken().getId(), userb.getId(), "asdfa-sdfsdf-sdfsd-sdfsdf-sdfsdf");
             Credentials after = client.listCredentials(response.getToken().getId(), userb.getId());
             assertNotNull(user);
@@ -414,7 +425,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            User userb = client.listUserByName(response.getToken().getId(), "bobBuilder");
+            User userb = client.listUserByName(response.getToken().getId(), kcsBuilder);
             client.deleteUserCredentials(response.getToken().getId(), userb.getId());
             Credentials after = client.listCredentials(response.getToken().getId(), userb.getId());
             assertNull(after);
@@ -430,13 +441,14 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            User bob = client.listUserByName(response.getToken().getId(), "bobBuilder");
-            User user = client.deleteUser(response.getToken().getId(), bob.getId());
-            assertNotNull(user);
+            User bob = client.listUserByName(response.getToken().getId(), kcsBuilder);
+            client.deleteUser(response.getToken().getId(), bob.getId());
+            client.listUserByName(response.getToken().getId(), kcsBuilder);
         } catch (IdentityFault ex) {
-            System.out.println("FAILURE gathering authenticated user info.");
-            System.out.print(ex.getMessage());
-            Assert.fail(ex.getDetails());
+            if (!ex.getMessage().contains("User not found")) {
+                System.out.print(ex.getMessage());
+                Assert.fail(ex.getDetails());
+            }
         }
     }
 
@@ -473,18 +485,21 @@ public class IdentityClientTest {
 
     @Test
     public void addGroup() throws Exception {
+        IdentityClient client = null;
+        AuthenticateResponse response = null;
         try {
-            IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
-            AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            Group group = client.addGroup(response.getToken().getId(), "ksctestgroup", "this is a test for jksc");
+            client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
+            response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
+            Group group = client.addGroup(response.getToken().getId(), kcsBuilderGroup, "this is a test for jksc");
             assertNotNull(group);
-            assertEquals("ksctestgroup", group.getName());
-            boolean isGdeleted = client.deleteGroup(response.getToken().getId(), group.getId());
-            assertTrue(isGdeleted);
+            assertEquals(kcsBuilderGroup, group.getName());
+//            boolean isGdeleted = client.deleteGroup(response.getToken().getId(), group.getId());
+//            assertTrue(isGdeleted);
         } catch (IdentityFault ex) {
-            System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
-            Assert.fail(ex.getMessage());
+            if (!ex.getMessage().contains("already exists")) {
+                Assert.fail(ex.getMessage());
+            }
         }
     }
 
@@ -494,11 +509,11 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+            GroupList groups = client.listGroups(response.getToken().getId(), null, null, kcsBuilderGroup);
             assertNotNull(groups);
-            assertEquals("ksctestgroup", groups.getGroup().get(0).getName());
-            boolean isGdeleted = client.deleteGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
-            assertTrue(isGdeleted);
+            assertEquals(kcsBuilderGroup, groups.getGroup().get(0).getName());
+//            boolean isGdeleted = client.deleteGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
+//            assertTrue(isGdeleted);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
             System.out.print(ex.getMessage());
@@ -512,10 +527,10 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+            GroupList groups = client.listGroups(response.getToken().getId(), null, null, kcsBuilderGroup);
             Group g = client.retrieveGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
             assertNotNull(g);
-            assertEquals("ksctestgroup", g.getName());
+            assertEquals(kcsBuilderGroup, g.getName());
             boolean isGdeleted = client.deleteGroup(response.getToken().getId(), g.getId());
             assertTrue(isGdeleted);
         } catch (IdentityFault ex) {
@@ -531,7 +546,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            GroupList groups = client.listGroups("my-simple-demo-token", null, null, "ksctestgroup");
+            GroupList groups = client.listGroups(response.getToken().toString(), null, null, kcsBuilderGroup);
             Group group = client.retrieveGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
             boolean isGdeleted = client.deleteGroup(response.getToken().getId(), group.getId());
             assertTrue(isGdeleted);
@@ -546,7 +561,7 @@ public class IdentityClientTest {
     public void addUserToGroup() throws Exception {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, kcsBuilderGroup);
         assertTrue(client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId()));
     }
 
@@ -554,7 +569,7 @@ public class IdentityClientTest {
     public void updateGroup() throws Exception {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, kcsBuilderGroup);
         String name = "newTestGroupName";
         Group group = client.updateGroup(response.getToken().getId(), groups.getGroup().get(0).getId(), null, name);
         assertTrue(group.getName().equals(name));
@@ -565,7 +580,7 @@ public class IdentityClientTest {
     public void listGroupsForUser() throws Exception {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, kcsBuilderGroup);
         client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId());
         GroupList userGroups = client.listGroupsForUser(response.getToken().getId(), response.getUser().getId());
         assertFalse(userGroups.getGroup().isEmpty());
@@ -575,7 +590,7 @@ public class IdentityClientTest {
     public void removeUserFromGroup() throws Exception {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, kcsBuilderGroup);
         assertTrue(client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId()));
         assertTrue(client.removeUserFromGroup(response.getToken().getId(), groups.getGroup().get(0).getId(), response.getUser().getId()));
     }
@@ -584,7 +599,7 @@ public class IdentityClientTest {
     public void listUsersFromGroup() throws Exception {
         IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
         AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-        GroupList groups = client.listGroups(response.getToken().getId(), null, null, "ksctestgroup");
+        GroupList groups = client.listGroups(response.getToken().getId(), null, null, kcsBuilderGroup);
         assertTrue(client.addUserToGroup(response.getToken().getId(), response.getUser().getId(), groups.getGroup().get(0).getId()));
         UserList users = client.listUsersForGroup(response.getToken().getId(), groups.getGroup().get(0).getId());
         assertFalse(users.getUser().isEmpty());
@@ -626,7 +641,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            RoleList roles = client.listUserGlobalRoles(response.getToken().getId(), IdentityUtil.getProperty("user_id"));
+            RoleList roles = client.listUserGlobalRoles(response.getToken().getId(), kcsBuilderId);
             assertNotNull(roles);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
@@ -669,7 +684,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            boolean role = client.addGlobalRoleToUser(response.getToken().getId(), IdentityUtil.getProperty("user_id"), "1");
+            boolean role = client.addGlobalRoleToUser(response.getToken().getId(), kcsBuilderId, "1");
             assertTrue(role);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");
@@ -821,7 +836,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            boolean re = client.addUserToDomain(response.getToken().getId(), "30007032", IdentityUtil.getProperty("user_id"));
+            boolean re = client.addUserToDomain(response.getToken().getId(), "30007032", kcsBuilderId);
             assertTrue(re);
         } catch (IdentityFault ex) {
             System.out.println("FAILURE gathering authenticated user info.");

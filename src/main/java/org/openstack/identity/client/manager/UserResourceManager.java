@@ -32,5 +32,5 @@ public interface UserResourceManager {
 
     public void deleteUserCredentials(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException, JAXBException;
 
-    public User deleteUser(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException;
+    public void deleteUser(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException;
 }

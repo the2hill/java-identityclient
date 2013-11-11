@@ -363,8 +363,8 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public Tenant retireveTenantById(String token, String tenantId) throws IdentityFault, URISyntaxException {
-        return retireveTenantById(url, token, tenantId);
+    public Tenant retrieveTenantById(String token, String tenantId) throws IdentityFault, URISyntaxException {
+        return retrieveTenantById(url, token, tenantId);
     }
 
     /**
@@ -377,7 +377,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public Tenant retireveTenantById(String url, String token, String tenantId) throws IdentityFault, URISyntaxException {
+    public Tenant retrieveTenantById(String url, String token, String tenantId) throws IdentityFault, URISyntaxException {
         return tenantResourceManager.retireveTenantById(client, url, token, tenantId);
     }
 
@@ -390,8 +390,8 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public Tenant retireveTenantByname(String token, String tenantName) throws IdentityFault, URISyntaxException {
-        return retireveTenantByName(url, token, tenantName);
+    public Tenant retrieveTenantByname(String token, String tenantName) throws IdentityFault, URISyntaxException {
+        return retrieveTenantByName(url, token, tenantName);
     }
 
     /**
@@ -404,7 +404,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public Tenant retireveTenantByName(String url, String token, String tenantName) throws IdentityFault, URISyntaxException {
+    public Tenant retrieveTenantByName(String url, String token, String tenantName) throws IdentityFault, URISyntaxException {
         return tenantResourceManager.retireveTenantByName(client, url, token, tenantName);
     }
 
@@ -418,8 +418,8 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public RoleList retireveRolesByTenantId(String token, String tenantName, String userId) throws IdentityFault, URISyntaxException {
-        return retireveRolesByTenantId(url, token, tenantName, userId);
+    public RoleList retrieveRolesByTenantId(String token, String tenantName, String userId) throws IdentityFault, URISyntaxException {
+        return retrieveRolesByTenantId(url, token, tenantName, userId);
     }
 
     /**
@@ -433,7 +433,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public RoleList retireveRolesByTenantId(String url, String token, String tenantName, String userId) throws IdentityFault, URISyntaxException {
+    public RoleList retrieveRolesByTenantId(String url, String token, String tenantName, String userId) throws IdentityFault, URISyntaxException {
         return tenantResourceManager.retrieveRolesByTenantId(client, url, token, tenantName, userId);
     }
 
@@ -739,8 +739,8 @@ public class IdentityClient extends IdentityManager {
      * @throws URISyntaxException
      * @throws JAXBException
      */
-    public User deleteUser(String token, String userId) throws IdentityFault, URISyntaxException, JAXBException {
-        return deleteUser(url, token, userId);
+    public void deleteUser(String token, String userId) throws IdentityFault, URISyntaxException, JAXBException {
+        deleteUser(url, token, userId);
     }
 
 
@@ -755,8 +755,8 @@ public class IdentityClient extends IdentityManager {
      * @throws URISyntaxException
      * @throws JAXBException
      */
-    public User deleteUser(String url, String token, String userId) throws IdentityFault, URISyntaxException, JAXBException {
-        return userResourceManager.deleteUser(client, url, token, userId);
+    public void deleteUser(String url, String token, String userId) throws IdentityFault, URISyntaxException, JAXBException {
+        userResourceManager.deleteUser(client, url, token, userId);
     }
 
     /* ******************************************************************************************************************/

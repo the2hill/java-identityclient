@@ -308,6 +308,7 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
     /**
      * Delete user by userId
      *
+     *
      * @param client
      * @param url
      * @param token
@@ -317,7 +318,7 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      * @throws URISyntaxException
      */
     @Override
-    public User deleteUser(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
+    public void deleteUser(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
             response = delete(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId), token);
@@ -328,7 +329,7 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(User.class);
+//        return response.getEntity(User.class);
     }
 
     /**
