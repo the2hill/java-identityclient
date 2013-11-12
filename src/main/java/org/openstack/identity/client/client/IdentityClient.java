@@ -982,6 +982,33 @@ public class IdentityClient extends IdentityManager {
     }
 
     /**
+     * Retrieve group by group name
+     *
+     * @param token
+     * @param name
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Group retrieveGroupByName(String token, String name) throws IdentityFault, URISyntaxException {
+        return retrieveGroupByName(url, token, name);
+    }
+
+    /**
+     * Retrieve group by groupId and specific url
+     *
+     * @param url
+     * @param token
+     * @param name
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    public Group retrieveGroupByName(String url, String token, String name) throws IdentityFault, URISyntaxException {
+        return groupResourceManager.retrieveGroupByName(client, url, token, name);
+    }
+
+    /**
      * Delete group by groupId
      *
      * @param token
@@ -1315,6 +1342,7 @@ public class IdentityClient extends IdentityManager {
     /**
      * Update secret question and answer for userId
      *
+     *
      * @param token
      * @param userId
      * @param question
@@ -1323,12 +1351,13 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public SecretQA updateSecretQA(String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
+    public ClientResponse updateSecretQA(String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
         return updateSecretQA(url, token, userId, question, answer);
     }
 
     /**
      * Update secret question and answer for userId with specific url
+     *
      *
      * @param url
      * @param token
@@ -1339,7 +1368,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public SecretQA updateSecretQA(String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
+    public ClientResponse updateSecretQA(String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
         return secretQAResourceManager.updateSecretQA(client, url, token, userId, question, answer);
     }
 

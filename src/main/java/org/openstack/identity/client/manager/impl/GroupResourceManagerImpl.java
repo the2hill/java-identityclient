@@ -46,9 +46,9 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
             if (name != null) params.add(IdentityConstants.NAME, name);
 
             if (params.isEmpty()) {
-                response = get(client, new URI(url + IdentityConstants.RAX_GROUP), token);
+                response = get(client, new URI(url + IdentityConstants.RAX_GROUPS), token);
             } else {
-                response = get(client, new URI(url + IdentityConstants.RAX_GROUP), token, params);
+                response = get(client, new URI(url + IdentityConstants.RAX_GROUPS), token, params);
             }
 
         } catch (UniformInterfaceException ux) {
@@ -83,9 +83,9 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
             if (limit != null) params.add(IdentityConstants.LIMIT, limit);
 
             if (params.isEmpty()) {
-                response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + id), token);
+                response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + id +  "/" + IdentityConstants.RAX_GROUP), token);
             } else {
-                response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + id + "/" + IdentityConstants.RAX), token, params);
+                response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + id + "/" + IdentityConstants.RAX_GROUP), token, params);
             }
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
@@ -119,9 +119,9 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
             if (limit != null) params.add(IdentityConstants.LIMIT, limit);
 
             if (params.isEmpty()) {
-                response = get(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId + "/" + IdentityConstants.USER_PATH), token);
+                response = get(client, new URI(url + IdentityConstants.RAX_GROUPS + "/" + groupId + "/" + IdentityConstants.USER_PATH), token);
             } else {
-                response = get(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId + "/" + IdentityConstants.USER_PATH), token, params);
+                response = get(client, new URI(url + IdentityConstants.RAX_GROUPS + "/" + groupId + "/" + IdentityConstants.USER_PATH), token, params);
             }
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
@@ -149,7 +149,7 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     public Group addGroup(Client client, String url, String token, String name, String description) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = post(client, new URI(url + IdentityConstants.RAX_GROUP), token, buildAddGroupRequest(name, description));
+            response = post(client, new URI(url + IdentityConstants.RAX_GROUPS), token, buildAddGroupRequest(name, description));
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
@@ -178,7 +178,7 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     public Group updateGroup(Client client, String url, String token, String groupId, String name, String description) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = put(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId), token, buildUpdateGroupRequest(name, description));
+            response = put(client, new URI(url + IdentityConstants.RAX_GROUPS + "/" + groupId), token, buildUpdateGroupRequest(name, description));
         } catch (JAXBException je) {
             handleBadResponse(null);
         }
@@ -204,7 +204,36 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     public Group retrieveGroup(Client client, String url, String token, String groupId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = get(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId), token);
+            response = get(client, new URI(url + IdentityConstants.RAX_GROUPS + "/" + groupId), token);
+        } catch (UniformInterfaceException ux) {
+            throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
+        }
+
+        if (!isResponseValid(response)) {
+            handleBadResponse(response);
+        }
+
+        return response.getEntity(Group.class);
+    }
+
+    /**
+     * Retrieve group by group name
+     *
+     * @param client
+     * @param url
+     * @param token
+     * @param name
+     * @return
+     * @throws IdentityFault
+     * @throws URISyntaxException
+     */
+    @Override
+    public Group retrieveGroupByName(Client client, String url, String token, String name) throws IdentityFault, URISyntaxException {
+        ClientResponse response = null;
+        try {
+            MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+            if (name != null) params.add(IdentityConstants.NAME, name);
+            response = get(client, new URI(url + IdentityConstants.RAX_GROUPS), token, params);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
@@ -219,7 +248,6 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     /**
      * Delete group by groupId
      *
-     *
      * @param client
      * @param url
      * @param token
@@ -232,7 +260,7 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     public boolean deleteGroup(Client client, String url, String token, String groupId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = delete(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId), token);
+            response = delete(client, new URI(url + IdentityConstants.RAX_GROUPS + "/" + groupId), token);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
@@ -260,7 +288,7 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     public boolean addUserToGroup(Client client, String url, String token, String userId, String groupId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = put(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId
+            response = put(client, new URI(url + IdentityConstants.RAX_GROUPS + "/" + groupId
                     + "/" + IdentityConstants.USER_PATH + "/" + userId), token, null);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
@@ -289,7 +317,7 @@ public class GroupResourceManagerImpl extends ResponseManagerImpl implements Gro
     public boolean removeUserFromGroup(Client client, String url, String token, String groupId, String userId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = delete(client, new URI(url + IdentityConstants.RAX_GROUP + "/" + groupId
+            response = delete(client, new URI(url + IdentityConstants.RAX_GROUPS + "/" + groupId
                     + "/" + IdentityConstants.USER_PATH + "/" + userId), token);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());

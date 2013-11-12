@@ -27,7 +27,9 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
     public ClientResponse createDomain(Client client, String url, String token, String domainId, String domainName, boolean enabled, String description) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = post(client, new URI(url + IdentityConstants.RAX_AUTH + IdentityConstants.DOMAINS), token, buildCreateDomainRequestObject(domainId, domainName, enabled, description));
+            response = post(client, new URI(url + IdentityConstants.RAX_AUTH
+                    + "/" + IdentityConstants.DOMAINS), token,
+                    buildCreateDomainRequestObject(domainId, domainName, enabled, description));
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
@@ -47,7 +49,9 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
         try {
             URI blah = new URI(url + IdentityConstants.RAX_AUTH + IdentityConstants.DOMAINS + "/" + domainId);
             Domain domain = getDomain(client, url, token, domainId);
-            response = put(client, new URI(url + IdentityConstants.RAX_AUTH + IdentityConstants.DOMAINS + "/" + domainId), token, buildUpdateDomainRequestObject(domain, domainId, domainName, enabled, description));
+            response = put(client, new URI(url + IdentityConstants.RAX_AUTH
+                    + "/" + IdentityConstants.DOMAINS + "/" + domainId),
+                    token, buildUpdateDomainRequestObject(domain, domainId, domainName, enabled, description));
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
@@ -65,7 +69,9 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
     public Domain getDomain(Client client, String url, String token, String domainId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = get(client, new URI(url + IdentityConstants.RAX_AUTH + IdentityConstants.DOMAINS + "/" + domainId), token);
+            response = get(client, new URI(url + IdentityConstants.RAX_AUTH
+                    + "/" + IdentityConstants.DOMAINS
+                    + "/" + domainId), token);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
@@ -81,7 +87,8 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
     public boolean deleteDomain(Client client, String url, String token, String domainId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = delete(client, new URI(url + IdentityConstants.RAX_AUTH + IdentityConstants.DOMAINS + "/" + domainId), token);
+            response = delete(client, new URI(url + IdentityConstants.RAX_AUTH
+                    + "/" + IdentityConstants.DOMAINS + "/" + domainId), token);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
@@ -97,7 +104,10 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
     public EndpointList getEndpointsForDomain(Client client, String url, String token, String domainId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = get(client, new URI(url + IdentityConstants.RAX_AUTH + IdentityConstants.DOMAINS + "/" + domainId + "/" + IdentityConstants.ENDPOINTS_PATH), token);
+            response = get(client, new URI(url + IdentityConstants.RAX_AUTH
+                    + "/" + IdentityConstants.DOMAINS
+                    + "/" + domainId
+                    + "/" + IdentityConstants.ENDPOINTS_PATH), token);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
@@ -118,7 +128,7 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
                 params.add("enabled", enabled);
             }
             response = get(client, new URI(url + IdentityConstants.RAX_AUTH
-                    + IdentityConstants.DOMAINS
+                    + "/" + IdentityConstants.DOMAINS
                     + "/" + domainId + "/"
                     + IdentityConstants.USER_PATH), token, params);
         } catch (UniformInterfaceException ux) {
@@ -137,9 +147,9 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
         ClientResponse response = null;
         try {
             response = put(client, new URI(url + IdentityConstants.RAX_AUTH
-                    + IdentityConstants.DOMAINS
-                    + "/" + domainId + "/"
-                    + IdentityConstants.USER_PATH
+                    + "/" + IdentityConstants.DOMAINS
+                    + "/" + domainId
+                    + "/" + IdentityConstants.USER_PATH
                     + "/" + userId), token, null);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
@@ -161,7 +171,7 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
                 params.add("enabled", enabled);
             }
             response = get(client, new URI(url + IdentityConstants.RAX_AUTH
-                    + IdentityConstants.DOMAINS
+                    + "/" + IdentityConstants.DOMAINS
                     + "/" + domainId + "/"
                     + IdentityConstants.TENANT_PATH), token, params);
         } catch (UniformInterfaceException ux) {
@@ -175,12 +185,12 @@ public class DomainResourceManagerImpl extends ResponseManagerImpl implements Do
         return response.getEntity(Tenants.class);
     }
 
-     @Override
+    @Override
     public boolean addTenantToDomain(Client client, String url, String token, String domainId, String tenantId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
             response = put(client, new URI(url + IdentityConstants.RAX_AUTH
-                    + IdentityConstants.DOMAINS
+                    + "/" + IdentityConstants.DOMAINS
                     + "/" + domainId + "/"
                     + IdentityConstants.TENANT_PATH
                     + "/" + tenantId), token, null);

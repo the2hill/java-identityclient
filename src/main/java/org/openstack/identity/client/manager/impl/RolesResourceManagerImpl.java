@@ -161,7 +161,11 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
     public boolean deleteGlobalRoleFromUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + IdentityConstants.ROLES_PATH + "/" + IdentityConstants.KSDAM_PATH + "/" + roleId), token);
+            response = delete(client, new URI(url + IdentityConstants.USER_PATH
+                    + "/" + userId
+                    + "/" + IdentityConstants.ROLES_PATH
+                    + "/" + IdentityConstants.KSDAM_PATH
+                    + "/" + roleId), token);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
@@ -188,7 +192,8 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
     public RoleList listUserGlobalRoles(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
-            response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/" + IdentityConstants.ROLES_PATH), token);
+            response = get(client, new URI(url + IdentityConstants.USER_PATH + "/"
+                    + userId + "/" + IdentityConstants.ROLES_PATH), token);
         } catch (UniformInterfaceException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }

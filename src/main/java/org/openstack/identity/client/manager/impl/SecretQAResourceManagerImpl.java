@@ -36,7 +36,7 @@ public class SecretQAResourceManagerImpl extends ResponseManagerImpl implements 
     }
 
     @Override
-    public SecretQA updateSecretQA(Client client, String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
+    public ClientResponse updateSecretQA(Client client, String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
         ClientResponse response = null;
         try {
             response = put(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/"
@@ -51,7 +51,7 @@ public class SecretQAResourceManagerImpl extends ResponseManagerImpl implements 
             handleBadResponse(response);
         }
 
-        return response.getEntity(SecretQA.class);
+        return response;
     }
 
     private String buildSecretQARequestObject(String question, String answer) throws JAXBException {

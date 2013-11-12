@@ -63,12 +63,13 @@ public class IdentityConstants {
 
     public static final String KSDAM_PATH = "OS-KSADM";
     public static final String RAX_API_CRED = "RAX-KSKEY:apiKeyCredentials";
-    public static final String RAX_GROUP = "RAX-GRPADM/groups";
+    public static final String RAX_GROUPS = "RAX-GRPADM/groups";
+    public static final String RAX_GROUP = "RAX-KSGRP";
     public static final String RAX_KSQA = "RAX-KSQA";
     public static final String RAX = "RAX-GRPADM";
     public static final String RAX_AUTH = "RAX-AUTH";
     public static final String IMPERSONATION_TOKENS_PATH = "impersonation-tokens";
-    public static final String DOMAINS = "/domains";
+    public static final String DOMAINS = "domains";
     public static final String RATE_LIMIT_RTADM= "rtadm";
 
     /**Query params**/

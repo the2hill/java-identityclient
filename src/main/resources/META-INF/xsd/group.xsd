@@ -26,7 +26,7 @@
                     xml:lang="EN"
                     xmlns="http://www.w3.org/1999/xhtml">
                 <p>
-                    A list of roles.
+                    A list of groups.
                 </p>
             </xsd:documentation>
         </annotation>
@@ -38,7 +38,7 @@
                     xml:lang="EN"
                     xmlns="http://www.w3.org/1999/xhtml">
                 <p>
-                    A role.
+                    A group.
                 </p>
             </xsd:documentation>
         </annotation>
