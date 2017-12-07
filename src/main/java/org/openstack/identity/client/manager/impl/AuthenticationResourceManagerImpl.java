@@ -1,8 +1,5 @@
 package org.openstack.identity.client.manager.impl;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import org.openstack.identity.client.api.credentials.ApiKeyCredentials;
 import org.openstack.identity.client.common.constants.IdentityConstants;
 import org.openstack.identity.client.common.util.ResourceUtil;
@@ -12,6 +9,9 @@ import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.manager.AuthenticationResourceManager;
 import org.openstack.identity.client.token.AuthenticateResponse;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ResponseProcessingException;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.net.URI;
@@ -41,12 +41,12 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
      */
     @Override
     public AuthenticateResponse authenticateUsernamePassword(Client client, String url, String username, String password) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             buildUsernamePasswordCredentials(username, password);
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH),
                     generateAuthenticateRequest());
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
             throw IdentityFault(e);
@@ -56,7 +56,7 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
             handleBadResponse(response);
         }
 
-        return response.getEntity(AuthenticateResponse.class);
+        return response.readEntity(AuthenticateResponse.class);
     }
 
     /**
@@ -72,11 +72,11 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
      */
     @Override
     public AuthenticateResponse authenticateTenantIdTokenId(Client client, String url, String tenantId, String tokenId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             buildTenantIdTokenIdCredentials(tenantId, tokenId);
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH), generateAuthenticateRequest());
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
             throw IdentityFault(e);
@@ -86,7 +86,7 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
             handleBadResponse(response);
         }
 
-        return response.getEntity(AuthenticateResponse.class);
+        return response.readEntity(AuthenticateResponse.class);
     }
 
     /**
@@ -102,11 +102,11 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
      */
     @Override
     public AuthenticateResponse authenticateTenantNameTokenId(Client client, String url, String tenantName, String tokenId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             buildTenantNameTokenIdCredentials(tenantName, tokenId);
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH), generateAuthenticateRequest());
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
             throw IdentityFault(e);
@@ -116,7 +116,7 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
             handleBadResponse(response);
         }
 
-        return response.getEntity(AuthenticateResponse.class);
+        return response.readEntity(AuthenticateResponse.class);
     }
 
     /**
@@ -132,10 +132,10 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
      */
     @Override
     public AuthenticateResponse authenticateUsernameApiKey(Client client, String url, String tenantName, String tokenId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH), buildUsernameApiKeyCredentials(tenantName, tokenId));
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
             throw IdentityFault(e);
@@ -145,7 +145,7 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
             handleBadResponse(response);
         }
 
-        return response.getEntity(AuthenticateResponse.class);
+        return response.readEntity(AuthenticateResponse.class);
     }
 
 
@@ -163,10 +163,10 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
      */
     @Override
     public AuthenticateResponse authenticateTenantIdUsernameApiKey(Client client, String url, String tenantId, String tenantName, String tokenId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH), buildTenantIdUsernameApiKeyCredentials(tenantId, tenantName, tokenId));
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
             throw IdentityFault(e);
@@ -176,7 +176,7 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
             handleBadResponse(response);
         }
 
-        return response.getEntity(AuthenticateResponse.class);
+        return response.readEntity(AuthenticateResponse.class);
     }
 
 
@@ -194,11 +194,11 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
      */
     @Override
     public AuthenticateResponse authenticateTenantIdUsernamePassword(Client client, String url, String tenantId, String username, String password) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             buildTenantIdUsernamePasswordCredentials(tenantId, username, password);
             response = post(client, new URI(url + IdentityConstants.TOKEN_PATH), generateAuthenticateRequest());
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
             throw IdentityFault(e);
@@ -208,7 +208,7 @@ public class AuthenticationResourceManagerImpl extends ResponseManagerImpl imple
             handleBadResponse(response);
         }
 
-        return response.getEntity(AuthenticateResponse.class);
+        return response.readEntity(AuthenticateResponse.class);
     }
 
     /**

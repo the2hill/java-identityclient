@@ -1,10 +1,10 @@
 package org.openstack.identity.client.manager;
 
-import com.sun.jersey.api.client.Client;
 import org.openstack.identity.client.endpoints.EndpointList;
 import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.token.AuthenticateResponse;
 
+import javax.ws.rs.client.Client;
 import java.net.URISyntaxException;
 
 public interface TokenResourceManager {

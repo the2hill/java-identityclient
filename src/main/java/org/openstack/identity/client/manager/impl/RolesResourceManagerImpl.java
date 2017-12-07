@@ -1,9 +1,6 @@
 package org.openstack.identity.client.manager.impl;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.openstack.identity.client.common.constants.IdentityConstants;
 import org.openstack.identity.client.common.util.ResourceUtil;
 import org.openstack.identity.client.common.wrapper.IdentityResponseWrapper;
@@ -13,7 +10,10 @@ import org.openstack.identity.client.roles.ObjectFactory;
 import org.openstack.identity.client.roles.Role;
 import org.openstack.identity.client.roles.RoleList;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.net.URI;
@@ -36,9 +36,9 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
      */
     @Override
     public RoleList listroles(Client client, String url, String token, String serviceId, String marker, String limit) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
-            MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+            MultivaluedStringMap params = new MultivaluedStringMap();
             if (marker != null) params.add(IdentityConstants.MARKER, marker);
             if (limit != null) params.add(IdentityConstants.LIMIT, limit);
             if (serviceId != null) params.add(IdentityConstants.SERVICE_ID, serviceId);
@@ -48,7 +48,7 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
             } else {
                 response = get(client, new URI(url + IdentityConstants.KSDAM_PATH + "/" + IdentityConstants.ROLES_PATH), token, params);
             }
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -56,7 +56,7 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
             handleBadResponse(response);
         }
 
-        return response.getEntity(RoleList.class);
+        return response.readEntity(RoleList.class);
 
     }
 
@@ -74,10 +74,10 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
      */
     @Override
     public Role addRole(Client client, String url, String token, String name, String description) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = post(client, new URI(url + IdentityConstants.KSDAM_PATH + "/" + IdentityConstants.ROLES_PATH), token, buildAddRoleRequestObject(name, description));
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
             throw new IdentityFault(e.getMessage(), e.getLinkedException().getLocalizedMessage(), Integer.valueOf(e.getErrorCode()));
@@ -87,7 +87,7 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
             handleBadResponse(response);
         }
 
-        return response.getEntity(Role.class);
+        return response.readEntity(Role.class);
     }
 
     /**
@@ -103,10 +103,10 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
      */
     @Override
     public Role getRole(Client client, String url, String token, String roleId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = get(client, new URI(url + IdentityConstants.KSDAM_PATH + "/" + IdentityConstants.ROLES_PATH + "/" + roleId), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -114,7 +114,7 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
             handleBadResponse(response);
         }
 
-        return response.getEntity(Role.class);
+        return response.readEntity(Role.class);
     }
 
     /**
@@ -131,10 +131,10 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
      */
     @Override
     public boolean addGlobalRoleToUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = put(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/" + IdentityConstants.ROLES_PATH + "/" + IdentityConstants.KSDAM_PATH + "/" + roleId), token, "");
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -159,10 +159,10 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
      */
     @Override
     public boolean deleteGlobalRoleFromUser(Client client, String url, String token, String userId, String roleId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + IdentityConstants.ROLES_PATH + "/" + IdentityConstants.KSDAM_PATH + "/" + roleId), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -186,10 +186,10 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
      */
     @Override
     public RoleList listUserGlobalRoles(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/" + IdentityConstants.ROLES_PATH), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -197,7 +197,7 @@ public class RolesResourceManagerImpl extends ResponseManagerImpl implements Rol
             handleBadResponse(response);
         }
 
-        return response.getEntity(RoleList.class);
+        return response.readEntity(RoleList.class);
     }
 
     /**

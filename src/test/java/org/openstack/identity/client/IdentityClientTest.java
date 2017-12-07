@@ -1,6 +1,5 @@
 package org.openstack.identity.client;
 
-import com.sun.jersey.api.client.ClientResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openstack.identity.client.access.Access;
@@ -23,6 +22,7 @@ import org.openstack.identity.client.token.Token;
 import org.openstack.identity.client.user.User;
 import org.openstack.identity.client.user.UserList;
 
+import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
 
 import static junit.framework.Assert.*;
@@ -728,7 +728,7 @@ public class IdentityClientTest {
         try {
             IdentityClient client = new IdentityClient(IdentityUtil.getProperty("auth_stag_url"));
             AuthenticateResponse response = client.authenticateUsernamePassword(IdentityUtil.getProperty("admin-un"), IdentityUtil.getProperty("admin-pw"));
-            ClientResponse re = client.createDomain(response.getToken().getId(), "30007032", "TestDomain", true, "This is just a test");
+            Response re = client.createDomain(response.getToken().getId(), "30007032", "TestDomain", true, "This is just a test");
             assertNotNull(re);
             assertTrue(re.getHeaders().containsKey("Location"));
             assertEquals("http://staging.identity.api.rackspacecloud.com/cloud/v2.0/RAX-AUTH/domains/30007032", re.getHeaders().containsKey("Location"));

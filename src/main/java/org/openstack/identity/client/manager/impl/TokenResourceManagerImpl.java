@@ -1,9 +1,6 @@
 package org.openstack.identity.client.manager.impl;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.openstack.identity.client.common.constants.IdentityConstants;
 import org.openstack.identity.client.common.wrapper.IdentityResponseWrapper;
 import org.openstack.identity.client.endpoints.EndpointList;
@@ -11,7 +8,10 @@ import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.manager.TokenResourceManager;
 import org.openstack.identity.client.token.AuthenticateResponse;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -31,12 +31,12 @@ public class TokenResourceManagerImpl extends ResponseManagerImpl implements Tok
      */
     @Override
     public AuthenticateResponse validateToken(Client client, String url, String adminToken, String token, String username) throws IdentityFault, URISyntaxException {
-       ClientResponse response = null;
-        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+       Response response = null;
+        MultivaluedStringMap params = new MultivaluedStringMap();
         params.add(IdentityConstants.BELONGS_TO, username);
         try {
             response = get(client, new URI(url + IdentityConstants.TOKEN_PATH + "/" + token), adminToken, params);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -44,7 +44,7 @@ public class TokenResourceManagerImpl extends ResponseManagerImpl implements Tok
             handleBadResponse(response);
         }
 
-        return response.getEntity(AuthenticateResponse.class);
+        return response.readEntity(AuthenticateResponse.class);
     }
 
     /**
@@ -75,10 +75,10 @@ public class TokenResourceManagerImpl extends ResponseManagerImpl implements Tok
      */
     @Override
     public EndpointList retrieveEndpointsForToken(Client client, String url, String adminToken, String token) throws IdentityFault, URISyntaxException {
-       ClientResponse response = null;
+       Response response = null;
         try {
             response = get(client, new URI(url + IdentityConstants.TOKEN_PATH + "/" + token + "/" + IdentityConstants.ENDPOINTS_PATH), adminToken);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -86,7 +86,7 @@ public class TokenResourceManagerImpl extends ResponseManagerImpl implements Tok
             handleBadResponse(response);
         }
 
-        return response.getEntity(EndpointList.class);
+        return response.readEntity(EndpointList.class);
     }
 
 

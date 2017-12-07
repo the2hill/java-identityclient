@@ -1,9 +1,9 @@
 package org.openstack.identity.client.manager;
 
-import com.sun.jersey.api.client.Client;
 import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.secretqa.SecretQA;
 
+import javax.ws.rs.client.Client;
 import java.net.URISyntaxException;
 
 public interface SecretQAResourceManager {

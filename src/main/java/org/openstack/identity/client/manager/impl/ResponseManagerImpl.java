@@ -1,73 +1,82 @@
 package org.openstack.identity.client.manager.impl;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.openstack.identity.client.common.constants.IdentityConstants;
 import org.openstack.identity.client.common.wrapper.IdentityResponseWrapper;
 import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.manager.ResponseManager;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public abstract class ResponseManagerImpl implements ResponseManager {
     private final Log logger = LogFactory.getLog(ResponseManagerImpl.class);
 
     @Override
-    public ClientResponse get(Client client, URI uri, String token) {
-        return get(client, uri, token, new MultivaluedMapImpl());
+    public Response get(Client client, URI uri, String token) {
+        return get(client, uri, token, new MultivaluedStringMap());
     }
 
 
     @Override
-    public ClientResponse get(Client client, URI uri, String token, MultivaluedMap<String, String> params) {
-        return client.resource(uri).queryParams(params).type(MediaType.APPLICATION_XML_TYPE)
+    public Response get(Client client, URI uri, String token, MultivaluedStringMap params) {
+        WebTarget target = client.target(uri);
+
+        for (String param : params.keySet()) {
+            target.queryParam(param, params.getFirst(param));
+        }
+        return target.request(MediaType.APPLICATION_XML_TYPE)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .header(IdentityConstants.X_TOKEN_HEADER, token)
-                .get(ClientResponse.class);
+                .get();
     }
 
     @Override
-    public ClientResponse post(Client client, URI uri, String body) {
-        return client.resource(uri).type(MediaType.APPLICATION_XML_TYPE)
+    public Response post(Client client, URI uri, String body) {
+        return client.target(uri).request(MediaType.APPLICATION_XML_TYPE)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .post(ClientResponse.class, body);
+                .post(Entity.xml(body));
     }
 
     @Override
-    public ClientResponse post(Client client, URI uri, String token, String body) {
-        return client.resource(uri).type(MediaType.APPLICATION_XML_TYPE)
+    public Response post(Client client, URI uri, String token, String body) {
+        return client.target(uri).request(MediaType.APPLICATION_XML_TYPE)
                 .header(IdentityConstants.X_TOKEN_HEADER, token)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .post(ClientResponse.class, body);
+                .post(Entity.xml(body));
     }
 
     @Override
-    public ClientResponse put(Client client, URI uri, String token, String body) {
-        return client.resource(uri).type(MediaType.APPLICATION_XML_TYPE)
+    public Response put(Client client, URI uri, String token, String body) {
+        return client.target(uri).request(MediaType.APPLICATION_XML_TYPE)
                 .header(IdentityConstants.X_TOKEN_HEADER, token)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .put(ClientResponse.class, body);
+                .put(Entity.xml(body));
     }
 
     @Override
-    public ClientResponse delete(Client client, URI uri, String token) {
-        return client.resource(uri).type(MediaType.APPLICATION_XML_TYPE)
+    public Response delete(Client client, URI uri, String token) {
+        return client.target(uri).request(MediaType.APPLICATION_XML_TYPE)
                 .header(IdentityConstants.X_TOKEN_HEADER, token)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .delete(ClientResponse.class);
+                .delete();
     }
 
-    @Override public ClientResponse head(Client client, URI uri, String body) {
+    @Override public Response head(Client client, URI uri, String body) {
         return null;
     }
 
-    public boolean isResponseValid(ClientResponse response) {
+    public boolean isResponseValid(Response response) {
         return (response != null && (response.getStatus() == IdentityConstants.ACCEPTED
                 || response.getStatus() == IdentityConstants.NON_AUTHORATIVE
                 || response.getStatus() == IdentityConstants.OK
@@ -75,7 +84,7 @@ public abstract class ResponseManagerImpl implements ResponseManager {
                 || response.getStatus() == IdentityConstants.CREATED));
     }
 
-    public boolean handleBadResponse(ClientResponse response) throws IdentityFault {
+    public boolean handleBadResponse(Response response) throws IdentityFault {
         if (response != null) {
             throw IdentityResponseWrapper.buildFaultMessage(response);
         } else {

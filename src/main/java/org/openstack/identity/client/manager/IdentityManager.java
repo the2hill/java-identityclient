@@ -1,11 +1,12 @@
 package org.openstack.identity.client.manager;
 
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.LoggingFilter;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.openstack.identity.client.common.util.IdentityUtil;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 
 
 public abstract class IdentityManager {
@@ -30,7 +31,7 @@ public abstract class IdentityManager {
      */
     public IdentityManager(String authUrl, int timeout) {
         this.url = authUrl;
-        this.client = new Client();
+        this.client = ClientBuilder.newBuilder().build();
         this.timeout = timeout;
     }
 
@@ -41,7 +42,7 @@ public abstract class IdentityManager {
      * @param isDebugging
      */
     public IdentityManager(String authUrl, int timeout, boolean isDebugging) {
-        this(authUrl, new Client(), timeout, isDebugging);
+        this(authUrl, ClientBuilder.newBuilder().build(), timeout, isDebugging);
     }
 
     /**
@@ -90,7 +91,7 @@ public abstract class IdentityManager {
      * @param isDebugging allows debugging option
      */
     public IdentityManager(String authUrl, boolean isDebugging) {
-        this(authUrl, new Client(), isDebugging);
+        this(authUrl, ClientBuilder.newBuilder().build(), isDebugging);
     }
 
     /**
@@ -108,19 +109,19 @@ public abstract class IdentityManager {
      */
     public IdentityManager(boolean isDebugging) {
         this.url = IdentityUtil.getProperty(auth_uri);
-        this.client = new Client();
+        this.client = ClientBuilder.newBuilder().build();
         this.isDebugging = isDebugging;
     }
 
 
     private Client configureClient(boolean isDebugging) {
-        DefaultClientConfig cc = new DefaultClientConfig();
-        cc.getProperties().put(ClientConfig.PROPERTY_FOLLOW_REDIRECTS, false);
-        cc.getProperties().put(ClientConfig.PROPERTY_CONNECT_TIMEOUT, timeout);
-        cc.getProperties().put(ClientConfig.PROPERTY_READ_TIMEOUT, timeout);
-        Client client = Client.create(cc);
+        ClientConfig cc = new ClientConfig();
+        cc.getProperties().put(ClientProperties.FOLLOW_REDIRECTS, false);
+        cc.getProperties().put(ClientProperties.CONNECT_TIMEOUT, timeout);
+        cc.getProperties().put(ClientProperties.READ_TIMEOUT, timeout);
+        Client client = ClientBuilder.newBuilder().withConfig(cc).build();
         if (isDebugging) {
-            client.addFilter(new LoggingFilter());
+            client.property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL, "FINEST");
         }
         return client;
     }

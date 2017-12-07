@@ -1,23 +1,24 @@
 package org.openstack.identity.client.manager;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 
-import javax.ws.rs.core.MultivaluedMap;
+import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Response;
 import java.net.URI;
 
 public interface ResponseManager {
-    public ClientResponse get(Client client, URI uri, String token);
+    public Response get(Client client, URI uri, String token);
 
-    public ClientResponse get(Client client, URI uri, String token, MultivaluedMap<String, String> params);
+    public Response get(Client client, URI uri, String token, MultivaluedStringMap params);
 
-    public ClientResponse post(Client client, URI uri, String body);
+    public Response post(Client client, URI uri, String body);
 
-    public ClientResponse post(Client client, URI uri, String token, String body);
+    public Response post(Client client, URI uri, String token, String body);
 
-    public ClientResponse put(Client client, URI uri, String token, String body);
+    public Response put(Client client, URI uri, String token, String body);
 
-    public ClientResponse delete(Client client, URI uri, String token);
+    public Response delete(Client client, URI uri, String token);
 
-    public ClientResponse head(Client client, URI uri, String body);
+    public Response head(Client client, URI uri, String body);
 }

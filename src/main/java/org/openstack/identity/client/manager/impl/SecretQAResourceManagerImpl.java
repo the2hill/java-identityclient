@@ -1,8 +1,5 @@
 package org.openstack.identity.client.manager.impl;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import org.openstack.identity.client.common.constants.IdentityConstants;
 import org.openstack.identity.client.common.util.ResourceUtil;
 import org.openstack.identity.client.common.wrapper.IdentityResponseWrapper;
@@ -11,6 +8,9 @@ import org.openstack.identity.client.manager.SecretQAResourceManager;
 import org.openstack.identity.client.secretqa.ObjectFactory;
 import org.openstack.identity.client.secretqa.SecretQA;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ResponseProcessingException;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.net.URI;
@@ -20,11 +20,11 @@ public class SecretQAResourceManagerImpl extends ResponseManagerImpl implements 
 
     @Override
     public SecretQA listSecretQA(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/"
                     + IdentityConstants.RAX_KSQA + "/" + IdentityConstants.SECRET_QA), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -32,16 +32,16 @@ public class SecretQAResourceManagerImpl extends ResponseManagerImpl implements 
             handleBadResponse(response);
         }
 
-        return response.getEntity(SecretQA.class);
+        return response.readEntity(SecretQA.class);
     }
 
     @Override
     public SecretQA updateSecretQA(Client client, String url, String token, String userId, String question, String answer) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = put(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId + "/"
                     + IdentityConstants.RAX_KSQA + "/" + IdentityConstants.SECRET_QA), token, buildSecretQARequestObject(question, answer));
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         } catch (JAXBException e) {
             throw new IdentityFault(e.getMessage(), e.getLinkedException().getLocalizedMessage(), Integer.valueOf(e.getErrorCode()));
@@ -51,7 +51,7 @@ public class SecretQAResourceManagerImpl extends ResponseManagerImpl implements 
             handleBadResponse(response);
         }
 
-        return response.getEntity(SecretQA.class);
+        return response.readEntity(SecretQA.class);
     }
 
     private String buildSecretQARequestObject(String question, String answer) throws JAXBException {

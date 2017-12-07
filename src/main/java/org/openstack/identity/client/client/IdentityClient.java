@@ -1,7 +1,5 @@
 package org.openstack.identity.client.client;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openstack.identity.client.access.Access;
@@ -22,6 +20,8 @@ import org.openstack.identity.client.token.AuthenticateResponse;
 import org.openstack.identity.client.user.User;
 import org.openstack.identity.client.user.UserList;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
 import java.net.URISyntaxException;
 
@@ -1398,7 +1398,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public ClientResponse createDomain(String token, String domainId, String domainName, boolean enabled, String description) throws IdentityFault, URISyntaxException {
+    public Response createDomain(String token, String domainId, String domainName, boolean enabled, String description) throws IdentityFault, URISyntaxException {
         return createDomain(url, token, domainId, domainName, enabled, description);
     }
 
@@ -1415,7 +1415,7 @@ public class IdentityClient extends IdentityManager {
      * @throws IdentityFault
      * @throws URISyntaxException
      */
-    public ClientResponse createDomain(String url, String token, String domainId, String domainName, boolean enabled, String description) throws IdentityFault, URISyntaxException {
+    public Response createDomain(String url, String token, String domainId, String domainName, boolean enabled, String description) throws IdentityFault, URISyntaxException {
         return domainResourceManager.createDomain(client, url, token, domainId, domainName, enabled, description);
     }
 

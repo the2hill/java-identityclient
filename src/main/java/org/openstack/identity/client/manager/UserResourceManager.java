@@ -1,12 +1,12 @@
 package org.openstack.identity.client.manager;
 
-import com.sun.jersey.api.client.Client;
 import org.openstack.identity.client.fault.IdentityFault;
 import org.openstack.identity.client.manager.entity.Credentials;
 import org.openstack.identity.client.token.AuthenticateResponse;
 import org.openstack.identity.client.user.User;
 import org.openstack.identity.client.user.UserList;
 
+import javax.ws.rs.client.Client;
 import javax.xml.bind.JAXBException;
 import java.net.URISyntaxException;
 

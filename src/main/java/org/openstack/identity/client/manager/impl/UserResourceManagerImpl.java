@@ -1,9 +1,6 @@
 package org.openstack.identity.client.manager.impl;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.openstack.identity.client.api.credentials.ApiKeyCredentials;
 import org.openstack.identity.client.common.constants.IdentityConstants;
 import org.openstack.identity.client.common.util.ResourceUtil;
@@ -16,7 +13,9 @@ import org.openstack.identity.client.user.ObjectFactory;
 import org.openstack.identity.client.user.User;
 import org.openstack.identity.client.user.UserList;
 
-import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ResponseProcessingException;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -37,17 +36,17 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      */
     @Override
     public UserList listUsers(Client client, String url, String token) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = get(client, new URI(url + IdentityConstants.USER_PATH), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(UserList.class);
+        return response.readEntity(UserList.class);
     }
 
     /**
@@ -63,19 +62,19 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      */
     @Override
     public User listUserByName(Client client, String url, String token, String username) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
-            MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+            MultivaluedStringMap params = new MultivaluedStringMap();
             params.add(IdentityConstants.NAME, username);
             response = get(client, new URI(url + IdentityConstants.USER_PATH), token, params);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(User.class);
+        return response.readEntity(User.class);
     }
 
     /**
@@ -91,17 +90,17 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      */
     @Override
     public User listUserById(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = get(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(User.class);
+        return response.readEntity(User.class);
     }
 
     /**
@@ -117,13 +116,13 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      */
     @Override
     public Credentials listCredentials(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = get(client, new URI(url + IdentityConstants.USER_PATH + "/"
                     + userId + "/"
                     + IdentityConstants.KSDAM_PATH
                     + "/credentials"), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -134,7 +133,7 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
 
         Credentials credentials = null;
         try {
-            AuthenticateResponse r = response.getEntity(AuthenticateResponse.class);
+            AuthenticateResponse r = response.readEntity(AuthenticateResponse.class);
             if (!r.getAny().isEmpty()) {
                 ApiKeyCredentials creds = (ApiKeyCredentials)
                         ResourceUtil.unmarshallResource(r.getAny().get(0),
@@ -187,18 +186,18 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      */
     @Override
     public User addUser(Client client, String url, String token, String username, String password, boolean enabled, String email, String region) throws IdentityFault, URISyntaxException, JAXBException {
-        ClientResponse response = null;
+        Response response = null;
         String userReq = buildAddUserRequest(username, password, enabled, email, region);
         try {
             response = post(client, new URI(url + IdentityConstants.USER_PATH), token, userReq);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(User.class);
+        return response.readEntity(User.class);
     }
 
     /**
@@ -218,20 +217,20 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      */
     @Override
     public User updateUser(Client client, String url, String token, String userId, String username, boolean enabled, String email, String region) throws IdentityFault, URISyntaxException, JAXBException {
-        ClientResponse response = null;
+        Response response = null;
 
         User user = listUserById(client, url, token, userId);
         String userReq = buildUpdateUserRequest(user, username, enabled, email, region);
         try {
             response = post(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId), token, userReq);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(User.class);
+        return response.readEntity(User.class);
     }
 
     /**
@@ -249,25 +248,25 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      */
     @Override
     public User updateUserPassword(Client client, String url, String token, String userId, String password) throws IdentityFault, URISyntaxException, JAXBException {
-        ClientResponse response = null;
+        Response response = null;
 
         User user = listUserById(client, url, token, userId);
         String userReq = buildUpdateUserPasswordRequest(user.getUsername(), password);
         try {
             response = post(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId), token, userReq);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(User.class);
+        return response.readEntity(User.class);
     }
 
     @Override
     public AuthenticateResponse updateUserCredentials(Client client, String url, String token, String userId, String apiKey) throws IdentityFault, URISyntaxException, JAXBException {
-        ClientResponse response = null;
+        Response response = null;
 
         User user = listUserById(client, url, token, userId);
         String userReq = buildUpdateUserCredentialsRequest(user.getUsername(), apiKey);
@@ -277,26 +276,26 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
                     + IdentityConstants.KSDAM_PATH
                     + "/credentials" + "/"
                     + IdentityConstants.RAX_API_CRED), token, userReq);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(AuthenticateResponse.class);
+        return response.readEntity(AuthenticateResponse.class);
     }
 
     @Override
     public void deleteUserCredentials(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException, JAXBException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = delete(client, new URI(url + IdentityConstants.USER_PATH + "/"
                     + userId + "/"
                     + IdentityConstants.KSDAM_PATH
                     + "/credentials" + "/"
                     + IdentityConstants.RAX_API_CRED), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
@@ -318,17 +317,17 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
      */
     @Override
     public User deleteUser(Client client, String url, String token, String userId) throws IdentityFault, URISyntaxException {
-        ClientResponse response = null;
+        Response response = null;
         try {
             response = delete(client, new URI(url + IdentityConstants.USER_PATH + "/" + userId), token);
-        } catch (UniformInterfaceException ux) {
+        } catch (ResponseProcessingException ux) {
             throw IdentityResponseWrapper.buildFaultMessage(ux.getResponse());
         }
 
         if (!isResponseValid(response)) {
             handleBadResponse(response);
         }
-        return response.getEntity(User.class);
+        return response.readEntity(User.class);
     }
 
     /**
@@ -379,7 +378,7 @@ public class UserResourceManagerImpl extends ResponseManagerImpl implements User
         }
 
         if (email != null) updatedUser.setEmail(email);
-        if (user.getEnabled() != enabled) updatedUser.setEnabled(enabled);
+        if (user.isEnabled() != enabled) updatedUser.setEnabled(enabled);
         if (region != null)
             updatedUser.getOtherAttributes().put(new QName(IdentityConstants.RAX_AUTH_NS, IdentityConstants.DEFAULT_REGION), region);
 
